@@ -9,7 +9,7 @@ mapping (address => uint) reveals;
 address[] revealed;
 
 uint256 startTime;
-uint256 revealTime;
+uint256 public revealTime;
 uint256 endTime;
 uint256 period;
 bool iscontract;

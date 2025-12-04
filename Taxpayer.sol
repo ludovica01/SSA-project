@@ -23,7 +23,7 @@ address public  immutable owner;  // since the owner cannot change
  uint constant  DEFAULT_ALLOWANCE = 5000;
 
  /* Constant income tax allowance for Older Taxpayers over 65 */
-  uint constant ALLOWANCE_OAP = 7000;
+  uint constant ALLOWANCE_OAP = 9000;
 
 // the initial value of allowance for this instance is immutable
 uint immutable INITIAL_TAX_ALLOWANCE;
@@ -33,8 +33,8 @@ uint immutable INITIAL_TAX_ALLOWANCE;
 
  uint income; 
 
-uint256 rev;
-bool committed;   // to track if joinLottery has been called
+uint256 public rev;
+bool public committed;   // to track if joinLottery has been called
 
 // getter methods
 function getIsMarried() public view returns(bool) {
@@ -45,6 +45,9 @@ function getSpouse() public view returns(address) {
     return spouse;
 }
 
+function getIncome() public view returns (uint) {
+  return income;
+}
 
 function getInitialTaxAllowance() public view returns (uint) {
   return INITIAL_TAX_ALLOWANCE;   // for secure external call
@@ -63,8 +66,8 @@ function setSpouse(address a) public {
   spouse = a;
 }
 
-function setIncome(uint _income) public onlyOwner {
-  income = _income;
+function setIncome(uint i) public onlyOwner {
+  income = i;
 }
 
 
@@ -117,7 +120,7 @@ function setIncome(uint _income) public onlyOwner {
 
   address oldSpouse = spouse;
   address newSpouseLocal =  new_spouse;
-  uint oldTaxAllowance;
+  uint oldTaxAllowance = tax_allowance;   // initialize
 
   spouse = newSpouseLocal;
   isMarried = true;
@@ -368,13 +371,24 @@ function setTaxAllowanceBySpouse(uint ta) public {
   try Taxpayer(spouse).receiveAllowance(change, address(this)) {
     // that's okay
   } catch {
+    // resstore and revert
+    tax_allowance += change;
     revert("Failed to transfer spouse");
   }
  }
 
 
  function receiveAllowance(uint amount, address from) public {
-  require(msg.sender == spouse || msg.sender == from, "Only spouse or origin");
+  // if sender is my spouse, allow it
+  if(msg.sender == spouse) {
+    tax_allowance += amount;
+    return;
+  }
+  // otherwise i need the sender to be an authorized contract AND the from paramether must be the caller
+  require(msg.sender.code.length > 0, "Caller must be a contract");
+  require(from == msg.sender, "From must be equal caller for 3rd-party contract");
+  require(isAuthorizedContract(msg.sender), "Caller not authorized");
+
   tax_allowance += amount;
  }
 
@@ -390,7 +404,7 @@ function setTaxAllowanceBySpouse(uint ta) public {
     }
  }
  
-  function setTaxAllowance(uint ta) public {
+  function setTaxAllowance(uint ta) public view {
     require(msg.sender == owner || msg.sender == spouse || isAuthorizedContract(msg.sender), "Not authorized to set allowance");
   }
 

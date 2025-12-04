@@ -6,58 +6,19 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "p",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "y",
-						"type": "bytes32"
+						"internalType": "uint256",
+						"name": "r",
+						"type": "uint256"
 					}
 				],
-				"name": "commit",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "commits",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "endLottery",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "isContract",
+				"name": "echidna_commit_sets_rev_and_flags",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -65,30 +26,55 @@
 						"type": "bool"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "rev",
+						"name": "r",
 						"type": "uint256"
 					}
 				],
-				"name": "reveal",
-				"outputs": [],
+				"name": "echidna_reveal_requires_commit",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "r",
+						"type": "uint256"
+					}
+				],
+				"name": "echidna_reveal_resets_state",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "revealTime",
+				"name": "lot",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "contract Lottery",
 						"name": "",
-						"type": "uint256"
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -96,9 +82,15 @@
 			},
 			{
 				"inputs": [],
-				"name": "startLottery",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "tp",
+				"outputs": [
+					{
+						"internalType": "contract Taxpayer",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			}
 		],
@@ -115,7 +107,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Lottery.sol": "Lottery"
+			"TestTaxpayerEchidna_Lottery.sol": "TestHardness_Lottery"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -142,6 +134,14 @@
 			"urls": [
 				"bzz-raw://40a288bde53a9521528ae6e6e9ee95f08c1e5345419732d9d60f44f68b87f860",
 				"dweb:/ipfs/QmRpQ284LJth2RTFwYa7jcvgyM86FdTbBCuF5kjpHzWuYQ"
+			]
+		},
+		"TestTaxpayerEchidna_Lottery.sol": {
+			"keccak256": "0x11b9ca50607ccdb14b8e2b89e1d2906f8467b400cf98de822d9506a81e04de84",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://bbbca70b53533f64189c35f64ad555c62a656cc2ebbfdbfadc3b35a6d450476f",
+				"dweb:/ipfs/QmUB2SCEKQanThDdwSkVcEdzUeK1WRCwESqsndMR5Y2zfs"
 			]
 		}
 	},

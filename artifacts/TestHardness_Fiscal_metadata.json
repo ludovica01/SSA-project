@@ -12,7 +12,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "echidna_divorce_coherence",
+				"name": "echidna_age_non_negative",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -25,7 +25,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "echidna_mutual_marriage",
+				"name": "echidna_no_tax_below_allowance",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -38,7 +38,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "echidna_not_self_spouse",
+				"name": "echidna_tax_allowance_oap_if_single_over_65",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -51,23 +51,28 @@
 			},
 			{
 				"inputs": [],
-				"name": "fail_marry_with_already_married",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "echidna_tax_consistency",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "fail_marry_with_non_contract",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "fail_marry_with_zero_address",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"name": "echidna_taxable_non_negative",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -85,27 +90,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "t2",
-				"outputs": [
-					{
-						"internalType": "contract Taxpayer",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "t2_divorce",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "t2_marry_t1",
+				"name": "t1_haveBirthday",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -124,7 +109,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"TestTaxPayerEchidna.sol": "TestHardness"
+			"TestTaxpayerEchidna_Fiscal.sol": "TestHardness_Fiscal"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -147,18 +132,18 @@
 			]
 		},
 		"Taxpayer.sol": {
-			"keccak256": "0x9a657f9ec5fa166fc2d0d3d37fa1eb5fbc06526cbe9c07992b51c59f3b3c1db3",
+			"keccak256": "0x6391787e8b1c35e4cff313daa305eb9fe55f848fbdd555b4acc86615752c732c",
 			"urls": [
-				"bzz-raw://7f3ec1e1ee15aa97397a4a91135437e343c3e5dd7bea5edfa83f4d7f901032fa",
-				"dweb:/ipfs/QmPYouAsJcF4AKbLmX38MDsUCioVsEVA8Z1QcBvVc4hJto"
+				"bzz-raw://0944756f60cbfd9bf2f06437108d84cf1841f43c04c3365e536901fcddede75c",
+				"dweb:/ipfs/QmaupAeTmeHUPWRU4z4hHkuqZmaGRHQToDjLvCNjE4Wy5J"
 			]
 		},
-		"TestTaxPayerEchidna.sol": {
-			"keccak256": "0x4f01d8c5a2614ac3cbc1c71307d726091d0564f033999e4006cfb7eb481b5551",
+		"TestTaxpayerEchidna_Fiscal.sol": {
+			"keccak256": "0xcd49e457306a668c2bfc19738cf706b394eca392fc2f17a3abf442108e5f60e9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://61475e22909f66d3561a26ad8d5be8a91b13252483235ba895beffdc0a401c41",
-				"dweb:/ipfs/QmV9KHBvDRqKrz5aa3shFc9BAuLr1E8KXX1XB3F9cvAVts"
+				"bzz-raw://1af985fd4622cef3cf8352c11174afb822fd75d38105f479e19961d8d479f761",
+				"dweb:/ipfs/QmZJEw3ATY554DEqt6GKF1pM7RcSaA1SxCv9ag5QfRyHpk"
 			]
 		}
 	},

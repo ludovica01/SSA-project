@@ -61,6 +61,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "committed",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "divorce",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -230,6 +243,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "getIncome",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "getInitialTaxAllowance",
 				"outputs": [
 					{
@@ -376,6 +402,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "rev",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -397,7 +436,7 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_income",
+						"name": "i",
 						"type": "uint256"
 					}
 				],
@@ -429,7 +468,7 @@
 				],
 				"name": "setTaxAllowance",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -513,18 +552,18 @@
 	},
 	"sources": {
 		"Lottery.sol": {
-			"keccak256": "0xed6a32b1873aa457fd3d60b872ce5cce15b921d8ce37f13cada30c75f5ad50d2",
+			"keccak256": "0x51347679114ac054d5563830fc2cbd7d4a22893159361b45d3e2b6a9875dacb8",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://ac95ced380926bf87ec39add62e86cdd6baf254c20c93fe87d507294f3a0e6b0",
-				"dweb:/ipfs/QmU1cRvVGja5utMxcHVjkWjzdycNvEUCJwzhekCUx6sVMw"
+				"bzz-raw://22849066f0bc1fe0e2d19bf9b898fa852069799edd8026b63d67e20392795139",
+				"dweb:/ipfs/QmRh7DKrL4EqMoFm1i5NDmic15SFHFmJHuY2HGCVqxz3uH"
 			]
 		},
 		"Taxpayer.sol": {
-			"keccak256": "0x9a657f9ec5fa166fc2d0d3d37fa1eb5fbc06526cbe9c07992b51c59f3b3c1db3",
+			"keccak256": "0x010893bd3a03f523729f600d210cc01549a43a508175027150ba9a55ee997782",
 			"urls": [
-				"bzz-raw://7f3ec1e1ee15aa97397a4a91135437e343c3e5dd7bea5edfa83f4d7f901032fa",
-				"dweb:/ipfs/QmPYouAsJcF4AKbLmX38MDsUCioVsEVA8Z1QcBvVc4hJto"
+				"bzz-raw://40a288bde53a9521528ae6e6e9ee95f08c1e5345419732d9d60f44f68b87f860",
+				"dweb:/ipfs/QmRpQ284LJth2RTFwYa7jcvgyM86FdTbBCuF5kjpHzWuYQ"
 			]
 		}
 	},

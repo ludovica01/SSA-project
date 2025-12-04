@@ -12,7 +12,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "echidna_divorce_coherence",
+				"name": "echidna_allowance_non_negative",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -25,7 +25,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "echidna_mutual_marriage",
+				"name": "echidna_allowance_sum_leq_base",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -38,7 +38,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "echidna_not_self_spouse",
+				"name": "echidna_received_at_least_initial",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -51,31 +51,69 @@
 			},
 			{
 				"inputs": [],
-				"name": "fail_marry_with_already_married",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "fail_marry_with_non_contract",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "fail_marry_with_zero_address",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "t1",
+				"name": "echidna_spousal_allowance_sum_preserved",
 				"outputs": [
 					{
-						"internalType": "contract Taxpayer",
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "fail_tramsfer_exceeded_allowance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "married",
+						"type": "uint256"
+					}
+				],
+				"name": "fail_transfer_when_not_married",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "fail_transfer_zero_amount",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "fail_unauthorized_receive",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nonContract",
+				"outputs": [
+					{
+						"internalType": "address",
 						"name": "",
 						"type": "address"
 					}
@@ -85,27 +123,20 @@
 			},
 			{
 				"inputs": [],
-				"name": "t2",
-				"outputs": [
-					{
-						"internalType": "contract Taxpayer",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "t2_divorce",
+				"name": "t1_marry_t2",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "t2_marry_t1",
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "t1_transfer_to_t2",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -118,13 +149,17 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"t1_transfer_to_t2(uint256)": {
+					"notice": "transfer allowance: only Owner on t1, it is required t1 is married to t2"
+				}
+			},
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"TestTaxPayerEchidna.sol": "TestHardness"
+			"TestTaxpayerEchidna_Pooling.sol": "TestHardness_Pooling"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -147,18 +182,18 @@
 			]
 		},
 		"Taxpayer.sol": {
-			"keccak256": "0x9a657f9ec5fa166fc2d0d3d37fa1eb5fbc06526cbe9c07992b51c59f3b3c1db3",
+			"keccak256": "0xe822a307b93a98928a6d7368c39d6863c6eb23ffbb708b42ce4fac851805741e",
 			"urls": [
-				"bzz-raw://7f3ec1e1ee15aa97397a4a91135437e343c3e5dd7bea5edfa83f4d7f901032fa",
-				"dweb:/ipfs/QmPYouAsJcF4AKbLmX38MDsUCioVsEVA8Z1QcBvVc4hJto"
+				"bzz-raw://ba9bf10560953291c3dea189ee97fd9a2f601ef27de7d1273b5ef90135145f12",
+				"dweb:/ipfs/QmaFLjMVnLjQYLhwFsreoLLeERTqvZvoFDo4xmFyX9D1av"
 			]
 		},
-		"TestTaxPayerEchidna.sol": {
-			"keccak256": "0x4f01d8c5a2614ac3cbc1c71307d726091d0564f033999e4006cfb7eb481b5551",
+		"TestTaxpayerEchidna_Pooling.sol": {
+			"keccak256": "0xbf7c663905aa613b111c061791b15441f51ab92ce841af86146b820cd474b50a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://61475e22909f66d3561a26ad8d5be8a91b13252483235ba895beffdc0a401c41",
-				"dweb:/ipfs/QmV9KHBvDRqKrz5aa3shFc9BAuLr1E8KXX1XB3F9cvAVts"
+				"bzz-raw://c5215cd7f99e3d7754dc092518e240a9ae6d169150cec496af262d893d3d6ff1",
+				"dweb:/ipfs/QmPLAhDJzSdCAHsWKACAHfBHa7XHHgGxpSQV5wtn1AtpmA"
 			]
 		}
 	},
