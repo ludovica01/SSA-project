@@ -17,8 +17,7 @@ contract Taxpayer {
 address  parent1; 
 address  parent2;
 
-address public owner;
-address immutable INITIAL_OWNER;  // since the owner cannot change
+address public  immutable owner;  // since the owner cannot change
 
  /* Constant default income tax allowance */
  uint constant  DEFAULT_ALLOWANCE = 5000;
@@ -35,6 +34,7 @@ uint immutable INITIAL_TAX_ALLOWANCE;
  uint income; 
 
 uint256 rev;
+bool committed;   // to track if joinLottery has been called
 
 // getter methods
 function getIsMarried() public view returns(bool) {
@@ -45,9 +45,6 @@ function getSpouse() public view returns(address) {
     return spouse;
 }
 
-function getIncome() public view returns (uint) {
-  return income;
-}
 
 function getInitialTaxAllowance() public view returns (uint) {
   return INITIAL_TAX_ALLOWANCE;   // for secure external call
@@ -77,14 +74,20 @@ function setIncome(uint _income) public onlyOwner {
    isMarried = false;
    parent1 = p1;
    parent2 = p2;
-   owner = msg.sender;
-   INITIAL_OWNER = msg.sender;
-   INITIAL_TAX_ALLOWANCE = DEFAULT_ALLOWANCE;   // immutable assegnation for deploy
+   owner = msg.sender;  // immutable assignment
+   INITIAL_TAX_ALLOWANCE = DEFAULT_ALLOWANCE;   // immutable assignment for deploy
    spouse = address(0);
    income = 0;
    tax_allowance = INITIAL_TAX_ALLOWANCE;
    iscontract = true;   // cannot change to false during execution
  } 
+
+  // declaration event to notify a marriage
+  event Married(address indexed a, address indexed b);
+
+
+
+
 
 // only the owner is able to perform sensible operations, that i apply it to
  modifier onlyOwner() {
@@ -99,7 +102,6 @@ function setIncome(uint _income) public onlyOwner {
   require(!isMarried, "I am already married");
   require(new_spouse != address(0), "Spouse cannot be zero address");
   require(new_spouse != address(this), "Cannot marry myself");
-  require(new_spouse != owner, "Cannot marry owner?");
   
   require(new_spouse.code.length > 0, "Spouse must be a contract");   // check the spouse is actually a contract
 
@@ -113,35 +115,39 @@ function setIncome(uint _income) public onlyOwner {
   }
   require(!partnerMarried, "Spouse already married");
 
+  address oldSpouse = spouse;
+  address newSpouseLocal =  new_spouse;
+  uint oldTaxAllowance;
 
-  spouse = new_spouse;
+  spouse = newSpouseLocal;
   isMarried = true;
-
-  // update the allowance based on age
-  tax_allowance = determineDefaultAllowance();
+  tax_allowance = determineDefaultAllowance();    // update tax allowance based on age
+  
 
   // update the partner variables to guarantee marriage to be mutual
   try Taxpayer(spouse).updateMarriageFromPartner(address(this)) {
-    // success
+    // ok
   } catch {
     // go back if partner update fails
-    spouse = address(0);
+    spouse = oldSpouse;
     isMarried = false;
+    tax_allowance = oldTaxAllowance;
     revert("Failed to update partner");
   }
 
-  // update the status of partner based on its age
-  try Taxpayer(new_spouse).setTaxAllowance(Taxpayer(new_spouse).getDefaultAllowance()) {
+  // try to set partner allowance
+  try Taxpayer(newSpouseLocal).setTaxAllowance(Taxpayer(newSpouseLocal).getDefaultAllowance()) {
     // that's ok
   } catch {
     // revert if marriage fails
-    spouse = address(0);
+    spouse = oldSpouse;
     isMarried = false;
+    tax_allowance = oldTaxAllowance;
     revert("Failed to set partner allowance");
   }
 
 
-
+  emit Married(address(this), newSpouseLocal);
 
  }
  
@@ -258,11 +264,7 @@ function setTaxAllowanceBySpouse(uint ta) public {
     return true;
   }
 
-  // invariant: the owner cannot change after its initialization
-  function echidna_owner_is_constant() public view returns (bool) {
-    return owner == INITIAL_OWNER;
-  }
-
+  
   // invariant: the flag iscontract cannot change to false during the execution of the contract
   function echidna_iscontract_is_true() public view returns (bool) {
     return iscontract;
@@ -343,8 +345,12 @@ function setTaxAllowanceBySpouse(uint ta) public {
 
   // structurral invariant: rev has to be resetted after revealLottery
   function echidna_rev_reset_after_reveal() public view returns(bool) {
-    // rev has to be 0 or reveal function has not been called yet
-    return rev == 0; 
+    // if there is a commit, rev has to  be 0 ONLY after revealLottery
+    if(committed) {
+      return rev != 0;
+    } else {
+      return rev == 0;    // if there is no commit, rev = 0
+    }
   }
 
 
@@ -376,8 +382,12 @@ function setTaxAllowanceBySpouse(uint ta) public {
  function haveBirthday() public onlyOwner {
   age++;
   if(!isMarried && spouse == address(0)) {  // only if single
-    applyOAPIfEligible();
-  }
+        if(age >= 65) {
+            tax_allowance = ALLOWANCE_OAP;
+        } else {
+            tax_allowance = DEFAULT_ALLOWANCE;
+        }
+    }
  }
  
   function setTaxAllowance(uint ta) public {
@@ -422,11 +432,11 @@ function setTaxAllowanceBySpouse(uint ta) public {
 
 
   function joinLottery(address lot, uint256 r) public onlyOwner {
-    require(lot != address(0), "Invalid lot");    // to avoid function failure
-    require(lot.code.length > 0, "Not a contract");
+    require(lot != address(0) && lot.code.length > 0 , "Invalid lottery");    // to avoid function failure
 
     try Lottery(lot).commit(keccak256(abi.encode(r))) {   // try-catch to avoid failure
       rev = r;
+      committed = true;   // there is an active commit
     } catch {
       revert("Lottery commit failed");
     }
@@ -434,11 +444,12 @@ function setTaxAllowanceBySpouse(uint ta) public {
 
 
    function revealLottery(address lot, uint256 r) public onlyOwner {
-    require(lot != address(0), "Invalid lot");
+    require(lot != address(0), "Invalid lotterry");
     require(rev != 0, "No committed reveal");
 
     try Lottery(lot).reveal(r) {
       rev = 0;
+      committed = false;    // reset the flag
     } catch {
       revert("Lottery reveal failed");
     }
@@ -446,17 +457,6 @@ function setTaxAllowanceBySpouse(uint ta) public {
 
 
 
-
-
-  // update the default allowance for 65-yo
-  function applyOAPIfEligible() public onlyOwner {
-    if(age >= 65) {
-      tax_allowance = ALLOWANCE_OAP;
-    }
-    else {
-      tax_allowance = DEFAULT_ALLOWANCE;
-    }
-  }
 
 
   // to get the taxable income (so only the part over the allowance)

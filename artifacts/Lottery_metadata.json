@@ -117,18 +117,18 @@
 	},
 	"sources": {
 		"Lottery.sol": {
-			"keccak256": "0xad9b3e5d53a295fbb8bf61081f44817a000211562ba4b4239acfc42c4c0430b8",
+			"keccak256": "0xed6a32b1873aa457fd3d60b872ce5cce15b921d8ce37f13cada30c75f5ad50d2",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://a40b40c6bd6916f68f0f0bd380bc89476e582139e48452b47dd6ab21f39fa58a",
-				"dweb:/ipfs/QmeYxwHnb8CPAiYXP2SdR9mUAbJNUy5SuzKW48muB8PY3i"
+				"bzz-raw://ac95ced380926bf87ec39add62e86cdd6baf254c20c93fe87d507294f3a0e6b0",
+				"dweb:/ipfs/QmU1cRvVGja5utMxcHVjkWjzdycNvEUCJwzhekCUx6sVMw"
 			]
 		},
 		"Taxpayer.sol": {
-			"keccak256": "0x7f065d44962c164bdd90e8decf0b224957c2a536b799b14d4a1f2f517694aac1",
+			"keccak256": "0x1ac3577086640bc522617fc62fb9e86ba03c5da8f763ee271d260437b9077ad5",
 			"urls": [
-				"bzz-raw://0b537747da99e81284afd529b15c2242ddb46c8adeaa92e1c9f4c439fa45d170",
-				"dweb:/ipfs/QmewsnRztRdzKP8HzBRA9VxkV4CyyeGazsMaT1DuvfENKF"
+				"bzz-raw://942687f9eafbb870a96fb7648d43d5a4cd53ddfe925e05b29163e3dae26ad73c",
+				"dweb:/ipfs/QmRFvUcf92DRuAy3Co1n7AsepBde8K51JEZWfBFc5379Ag"
 			]
 		}
 	},
