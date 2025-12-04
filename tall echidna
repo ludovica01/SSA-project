@@ -1,0 +1,1372 @@
+[4mBREW[24m(1)                                                 General Commands Manual                                                [4mBREW[24m(1)
+
+[1mNAME[0m
+       brew - The Missing Package Manager for macOS (or Linux)
+
+[1mSYNOPSIS[0m
+       [1mbrew --version[0m
+       [1mbrew [4m[22mcommand[24m [[1m--verbose[22m|[1m-v[22m] [[4moptions[24m] [[4mformula[24m] ...
+
+[1mDESCRIPTION[0m
+       Homebrew  is  the  easiest and most flexible way to install the UNIX tools Apple didn’t include with macOS. It can also install
+       software not packaged for your Linux distribution without requiring [1msudo[22m.
+
+[1mTERMINOLOGY[0m
+       [1mformula[0m
+              Homebrew package definition that builds from upstream sources
+
+       [1mcask   [22mHomebrew package definition that installs pre-compiled binaries built and signed by upstream
+
+       [1mprefix [22mpath in which Homebrew is installed, e.g. [1m/opt/homebrew [22mor [1m/home/linuxbrew/.linuxbrew[0m
+
+       [1mkeg    [22minstallation destination directory of a given [1mformula [22mversion, e.g. [1m/opt/homebrew/Cellar/foo/0.1[0m
+
+       [1mrack   [22mdirectory containing one or more versioned [1mkegs[22m, e.g. [1m/opt/homebrew/Cellar/foo[0m
+
+       [1mkeg-only[0m
+              a [1mformula [22mis [4mkeg-only[24m if it is not symlinked into Homebrew’s prefix
+
+       [1mopt prefix[0m
+              a symlink to the active version of a [1mkeg[22m, e.g. [1m/opt/homebrew/opt/foo[0m
+
+       [1mCellar [22mdirectory containing one or more named [1mracks[22m, e.g. [1m/opt/homebrew/Cellar[0m
+
+       [1mCaskroom[0m
+              directory containing one or more named [1mcasks[22m, e.g. [1m/opt/homebrew/Caskroom[0m
+
+       [1mexternal command[0m
+              [1mbrew [22msubcommand defined outside of the Homebrew/brew GitHub repository
+
+       [1mtap    [22mdirectory (and usually Git repository) of [1mformulae[22m, [1mcasks [22mand/or [1mexternal commands[0m
+
+       [1mbottle [22mpre-built [1mkeg [22mpoured into a [1mrack [22mof the [1mCellar [22minstead of building from upstream sources
+
+[1mESSENTIAL COMMANDS[0m
+       For the full command list, see the [4mCOMMANDS[24m section.
+
+       With [1m--verbose [22mor [1m--debug[22m, many commands print extra debugging information. Note that these options should only appear after  a
+       command.
+
+       Some command behaviour can be customised with environment variables; see the [4mENVIRONMENT[24m section.
+
+   [1minstall [4mformula[0m
+       Install [4mformula[24m.
+
+       [4mformula[24m  is  usually  the name of the formula to install, but it has other syntaxes which are listed in the [4mSPECIFYING[24m [4mFORMULAE[0m
+       section.
+
+   [1muninstall [4mformula[0m
+       Uninstall [4mformula[24m.
+
+   [1mlist[0m
+       List all installed formulae.
+
+   [1msearch [22m[[4m[1mtext[24m[22m|[1m/[4mtext[24m/[22m]
+       Perform a substring search of cask tokens and formula names for [4mtext[24m. If [4mtext[24m is flanked by slashes, it  is  interpreted  as  a
+       regular  expression.  The search for [4mtext[24m is extended online to [1mhomebrew/core [22mand [1mhomebrew/cask[22m. If no search term is provided,
+       all locally available formulae are listed.
+
+[1mCOMMANDS[0m
+   [1malias [22m[[1m--edit[22m] [[4m[1malias[24m[22m|[4m[1malias[24m[22m=[4m[1mcommand[24m[22m]
+       Show an alias’s command. If no alias is given, print the whole list.
+
+       [1m--edit [22mEdit aliases in a text editor. Either one or all aliases may be opened at once. If the given alias doesn’t  exist  it’ll
+              be pre-populated with a template.
+
+   [1manalytics [22m[[4m[1msubcommand[24m[22m]
+       Control Homebrew’s anonymous aggregate user behaviour analytics. Read more at ]8;;https://docs.brew.sh/Analytics\https://docs.brew.sh/Analytics]8;;\.
+
+       [1mbrew analytics [22m[[1mstate[22m]
+              Display the current state of Homebrew’s analytics.
+
+       [1mbrew analytics [22m([1mon[22m|[1moff[22m)
+              Turn Homebrew’s analytics on or off respectively.
+
+   [1mautoremove [22m[[1m--dry-run[22m]
+       Uninstall formulae that were only installed as a dependency of another formula and are now no longer needed.
+
+       [1m-n[22m, [1m--dry-run[0m
+              List what would be uninstalled, but do not actually uninstall anything.
+
+   [1mbundle [22m[[4m[1msubcommand[24m[22m]
+       Bundler  for  non-Ruby dependencies from Homebrew, Homebrew Cask, Mac App Store, Visual Studio Code (and forks/variants) and Go
+       packages.
+
+       [1mbrew bundle [22m[[1minstall[22m]
+              Install and upgrade (by default) all dependencies from the [1mBrewfile[22m.
+
+       You can specify the [1mBrewfile [22mlocation using [1m--file [22mor by setting the [1m$HOMEBREW_BUNDLE_FILE [22menvironment variable.
+
+       You can skip the installation of dependencies by adding space-separated values to one or  more  of  the  following  environment
+       variables: [1m$HOMEBREW_BUNDLE_BREW_SKIP[22m, [1m$HOMEBREW_BUNDLE_CASK_SKIP[22m, [1m$HOMEBREW_BUNDLE_MAS_SKIP[22m, [1m$HOMEBREW_BUNDLE_TAP_SKIP[22m.
+
+       [1mbrew bundle upgrade[0m
+              Shorthand for [1mbrew bundle install --upgrade[22m.
+
+       [1mbrew bundle dump[0m
+              Write  all  installed  casks/formulae/images/taps into a [1mBrewfile [22min the current directory or to a custom file specified
+              with the [1m--file [22moption.
+
+       [1mbrew bundle cleanup[0m
+              Uninstall all dependencies not present in the [1mBrewfile[22m.
+
+       This workflow is useful for maintainers or testers who regularly install lots of formulae.
+
+       Unless [1m--force [22mis passed, this returns a 1 exit code if anything would be removed.
+
+       [1mbrew bundle check[0m
+              Check if all dependencies present in the [1mBrewfile [22mare installed.
+
+       This provides a successful exit code if everything is up-to-date, making it useful for scripting.
+
+       [1mbrew bundle list[0m
+              List all dependencies present in the [1mBrewfile[22m.
+
+       By default, only Homebrew formula dependencies are listed.
+
+       [1mbrew bundle edit[0m
+              Edit the [1mBrewfile [22min your editor.
+
+       [1mbrew bundle add [4m[22mname[24m [...]
+              Add entries to your [1mBrewfile[22m. Adds formulae by default. Use [1m--cask[22m, [1m--tap [22mor [1m--vscode [22mto add the corresponding entry in‐
+              stead.
+
+       [1mbrew bundle remove [4m[22mname[24m [...]
+              Remove entries that match [1mname [22mfrom your [1mBrewfile[22m. Use [1m--formula[22m, [1m--cask[22m, [1m--tap[22m, [1m--mas [22mor [1m--vscode [22mto  remove  only  en‐
+              tries of the corresponding type. Passing [1m--formula [22malso removes matches against formula aliases and old formula names.
+
+       [1mbrew bundle exec [22m[[1m--check[22m] [4mcommand[0m
+              Run an external command in an isolated build environment based on the [1mBrewfile [22mdependencies.
+
+       This  sanitized  build  environment  ignores  unrequested dependencies, which makes sure that things you didn’t specify in your
+       [1mBrewfile [22mwon’t get picked up by commands like [1mbundle install[22m, [1mnpm install[22m, etc. It will also add compiler flags which will help
+       with finding keg-only dependencies like [1mopenssl[22m, [1micu4c[22m, etc.
+
+       [1mbrew bundle sh [22m[[1m--check[22m]
+              Run your shell in a [1mbrew bundle exec [22menvironment.
+
+       [1mbrew bundle env [22m[[1m--check[22m]
+              Print the environment variables that would be set in a [1mbrew bundle exec [22menvironment.
+
+       [1m--file [22mRead from or write to the [1mBrewfile [22mfrom this location. Use [1m--file=- [22mto pipe to stdin/stdout.
+
+       [1m--global[0m
+              Read from or write to the [1mBrewfile [22mfrom [1m$HOMEBREW_BUNDLE_FILE_GLOBAL [22m(if set), [1m${XDG_CONFIG_HOME}/homebrew/Brewfile  [22m(if
+              [1m$XDG_CONFIG_HOME [22mis set), [1m~/.homebrew/Brewfile [22mor [1m~/.Brewfile [22motherwise.
+
+       [1m-v[22m, [1m--verbose[0m
+              [1minstall [22mprints output from commands as they are run. [1mcheck [22mlists all missing dependencies.
+
+       [1m--no-upgrade[0m
+              [1minstall  [22mdoes  not  run [1mbrew upgrade [22mon outdated dependencies. [1mcheck [22mdoes not check for outdated dependencies. Note they
+              may still be upgraded by [1mbrew install [22mif needed. Enabled by default if [1m$HOMEBREW_BUNDLE_NO_UPGRADE [22mis set.
+
+       [1m--upgrade[0m
+              [1minstall [22mruns [1mbrew upgrade [22mon outdated dependencies, even if [1m$HOMEBREW_BUNDLE_NO_UPGRADE [22mis set.
+
+       [1m--upgrade-formulae[0m
+              [1minstall [22mruns [1mbrew upgrade [22mon any of these comma-separated formulae, even if [1m$HOMEBREW_BUNDLE_NO_UPGRADE [22mis set.
+
+       [1m--install[0m
+              Run [1minstall [22mbefore continuing to other operations, e.g. [1mexec[22m.
+
+       [1m--services[0m
+              Temporarily start services while running the [1mexec [22mor [1msh [22mcommand. Enabled by default if [1m$HOMEBREW_BUNDLE_SERVICES [22mis set.
+
+       [1m-f[22m, [1m--force[0m
+              [1minstall [22mruns with [1m--force[22m/[1m--overwrite[22m. [1mdump [22moverwrites an existing [1mBrewfile[22m. [1mcleanup [22mactually performs its cleanup oper‐
+              ations.
+
+       [1m--cleanup[0m
+              [1minstall [22mperforms cleanup operation, same  as  running  [1mcleanup  --force[22m.  Enabled  by  default  if  [1m$HOMEBREW_BUNDLE_IN‐[0m
+              [1mSTALL_CLEANUP [22mis set and [1m--global [22mis passed.
+
+       [1m--all  list [22mall dependencies.
+
+       [1m--formula[0m
+              [1mlist[22m, [1mdump [22mor [1mcleanup [22mHomebrew formula dependencies.
+
+       [1m--cask list[22m, [1mdump [22mor [1mcleanup [22mHomebrew cask dependencies.
+
+       [1m--tap  list[22m, [1mdump [22mor [1mcleanup [22mHomebrew tap dependencies.
+
+       [1m--mas  list [22mor [1mdump [22mMac App Store dependencies.
+
+       [1m--vscode[0m
+              [1mlist[22m, [1mdump [22mor [1mcleanup [22mVSCode (and forks/variants) extensions.
+
+       [1m--go   list [22mor [1mdump [22mGo packages.
+
+       [1m--no-vscode[0m
+              [1mdump [22mwithout VSCode (and forks/variants) extensions. Enabled by default if [1m$HOMEBREW_BUNDLE_DUMP_NO_VSCODE [22mis set.
+
+       [1m--no-go[0m
+              [1mdump [22mwithout Go packages. Enabled by default if [1m$HOMEBREW_BUNDLE_DUMP_NO_GO [22mis set.
+
+       [1m--describe[0m
+              [1mdump  [22madds  a description comment above each line, unless the dependency does not have a description. Enabled by default
+              if [1m$HOMEBREW_BUNDLE_DUMP_DESCRIBE [22mis set.
+
+       [1m--no-restart[0m
+              [1mdump [22mdoes not add [1mrestart_service [22mto formula lines.
+
+       [1m--zap  cleanup [22mcasks using the [1mzap [22mcommand instead of [1muninstall[22m.
+
+       [1m--check[0m
+              Check that all dependencies in the Brewfile are installed before running [1mexec[22m, [1msh[22m, or [1menv[22m.
+
+   [1mcasks[0m
+       List all locally installable casks including short names.
+
+   [1mcleanup [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       Remove stale lock files and outdated downloads for all formulae and casks, and remove old versions of  installed  formulae.  If
+       arguments  are specified, only do this for the given formulae and casks. Removes all downloads more than 120 days old. This can
+       be adjusted with [1m$HOMEBREW_CLEANUP_MAX_AGE_DAYS[22m.
+
+       [1m--prune[0m
+              Remove all cache files older than specified [4mdays[24m. If you want to remove everything, use [1m--prune=all[22m.
+
+       [1m-n[22m, [1m--dry-run[0m
+              Show what would be removed, but do not actually remove anything.
+
+       [1m-s[22m, [1m--scrub[0m
+              Scrub the cache, including downloads for even the latest versions. Note that downloads for  any  installed  formulae  or
+              casks will still not be deleted. If you want to delete those too: [1mrm -rf "$(brew --cache)"[0m
+
+       [1m--prune-prefix[0m
+              Only prune the symlinks and directories from the prefix and remove no other files.
+
+   [1mcommand [4mcommand[24m [22m[...]
+       Display the path to the file being used when invoking [1mbrew [4m[22mcmd[24m.
+
+   [1mcommand-not-found-init[0m
+       Print instructions for setting up the command-not-found hook for your shell. If the output is not to a tty, print the appropri‐
+       ate handler script for your shell.
+
+       For more information, see: https://docs.brew.sh/Command-Not-Found
+
+   [1mcommands [22m[[1m--quiet[22m] [[1m--include-aliases[22m]
+       Show lists of built-in and external commands.
+
+       [1m-q[22m, [1m--quiet[0m
+              List only the names of commands without category headers.
+
+       [1m--include-aliases[0m
+              Include aliases of internal commands.
+
+   [1mcompletions [22m[[4m[1msubcommand[24m[22m]
+       Control  whether Homebrew automatically links external tap shell completion files. Read more at ]8;;https://docs.brew.sh/Shell-Completion\https://docs.brew.sh/Shell-Com‐
+       pletion]8;;\.
+
+       [1mbrew completions [22m[[1mstate[22m]
+              Display the current state of Homebrew’s completions.
+
+       [1mbrew completions [22m([1mlink[22m|[1munlink[22m)
+              Link or unlink Homebrew’s completions.
+
+   [1mconfig, --config[0m
+       Show Homebrew and system configuration info useful for debugging. If you file a bug report, you will  be  required  to  provide
+       this information.
+
+   [1mdeps [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       Show  dependencies  for [4mformula[24m. When given multiple formula arguments, show the intersection of dependencies for each formula.
+       By default, [1mdeps [22mshows all required and recommended dependencies.
+
+       If any version of each formula argument is installed and no other options are passed, this command displays their  actual  run‐
+       time dependencies (similar to [1mbrew linkage[22m), which may differ from a formula’s declared dependencies.
+
+       [4mNote:[24m [1m--missing [22mand [1m--skip-recommended [22mhave precedence over [1m--include-*[22m.
+
+       [1m-n[22m, [1m--topological[0m
+              Sort dependencies in topological order.
+
+       [1m-1[22m, [1m--direct[0m
+              Show only the direct dependencies declared in the formula.
+
+       [1m--union[0m
+              Show the union of dependencies for multiple [4mformula[24m, instead of the intersection.
+
+       [1m--full-name[0m
+              List dependencies by their full name.
+
+       [1m--include-implicit[0m
+              Include implicit dependencies used to download and unpack source files.
+
+       [1m--include-build[0m
+              Include [1m:build [22mdependencies for [4mformula[24m.
+
+       [1m--include-optional[0m
+              Include [1m:optional [22mdependencies for [4mformula[24m.
+
+       [1m--include-test[0m
+              Include [1m:test [22mdependencies for [4mformula[24m (non-recursive).
+
+       [1m--skip-recommended[0m
+              Skip [1m:recommended [22mdependencies for [4mformula[24m.
+
+       [1m--include-requirements[0m
+              Include requirements in addition to dependencies for [4mformula[24m.
+
+       [1m--tree [22mShow dependencies as a tree. When given multiple formula arguments, show individual trees for each formula.
+
+       [1m--prune[0m
+              Prune parts of tree already seen.
+
+       [1m--graph[0m
+              Show dependencies as a directed graph.
+
+       [1m--dot  [22mShow text-based graph description in DOT format.
+
+       [1m--annotate[0m
+              Mark any build, test, implicit, optional, or recommended dependencies as such in the output.
+
+       [1m--installed[0m
+              List  dependencies  for  formulae that are currently installed. If [4mformula[24m is specified, list only its dependencies that
+              are currently installed.
+
+       [1m--missing[0m
+              Show only missing dependencies.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not, to list their dependencies.
+
+       [1m--for-each[0m
+              Switch into the mode used by the [1m--eval-all [22moption, but only list dependencies for each provided  [4mformula[24m,  one  formula
+              per line. This is used for debugging the [1m--installed[22m/[1m--eval-all [22mdisplay mode.
+
+       [1m--HEAD [22mShow dependencies for HEAD version instead of stable version.
+
+       [1m--os   [22mShow dependencies for the given operating system.
+
+       [1m--arch [22mShow dependencies for the given CPU architecture.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+   [1mdesc [22m[[4m[1moptions[24m[22m] [4m[1mformula[24m[22m|[4m[1mcask[24m[22m|[4m[1mtext[24m[22m|[1m/[4mregex[24m/ [22m[...]
+       Display  [4mformula[24m’s name and one-line description. The cache is created on the first search, making that search slower than sub‐
+       sequent ones.
+
+       [1m-s[22m, [1m--search[0m
+              Search both names and descriptions for [4mtext[24m. If [4mtext[24m is flanked by slashes, it is interpreted as a regular expression.
+
+       [1m-n[22m, [1m--name[0m
+              Search just names for [4mtext[24m. If [4mtext[24m is flanked by slashes, it is interpreted as a regular expression.
+
+       [1m-d[22m, [1m--description[0m
+              Search just descriptions for [4mtext[24m. If [4mtext[24m is flanked by slashes, it is interpreted as a regular expression.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not, to search their descriptions. Enabled by default if
+              [1m$HOMEBREW_EVAL_ALL [22mis set.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+   [1mdeveloper [22m[[4m[1msubcommand[24m[22m]
+       Control Homebrew’s developer mode. When developer mode is enabled, [1mbrew update [22mwill update Homebrew to the latest commit on the
+       [1mmain [22mbranch instead of the latest stable version along with some other behaviour changes.
+
+       [1mbrew developer [22m[[1mstate[22m]
+              Display the current state of Homebrew’s developer mode.
+
+       [1mbrew developer [22m([1mon[22m|[1moff[22m)
+              Turn Homebrew’s developer mode on or off respectively.
+
+   [1mdocs[0m
+       Open Homebrew’s online documentation at ]8;;https://docs.brew.sh\https://docs.brew.sh]8;;\ in a browser.
+
+   [1mdoctor, dr [22m[[1m--list-checks[22m] [[1m--audit-debug[22m] [[4m[1mdiagnostic_check[24m [22m...]
+       Check your system for potential problems. Will exit with a non-zero status if any potential problems are found.
+
+       Please note that these warnings are just used to help the Homebrew maintainers with debugging if you file an issue.  If  every‐
+       thing you use Homebrew for is working fine: please don’t worry or file an issue; just ignore this.
+
+       [1m--list-checks[0m
+              List all audit methods, which can be run individually if provided as arguments.
+
+       [1m-D[22m, [1m--audit-debug[0m
+              Enable debugging and profiling of audit methods.
+
+   [1mfetch [22m[[4m[1moptions[24m[22m] [4m[1mformula[24m[22m|[4m[1mcask[24m [22m[...]
+       Download  a  bottle (if available) or source packages for [4mformula[24me and binaries for [4mcask[24ms. For files, also print SHA-256 check‐
+       sums.
+
+       [1m--os   [22mDownload for the given operating system. (Pass [1mall [22mto download for all operating systems.)
+
+       [1m--arch [22mDownload for the given CPU architecture. (Pass [1mall [22mto download for all architectures.)
+
+       [1m--bottle-tag[0m
+              Download a bottle for given tag.
+
+       [1m--HEAD [22mFetch HEAD version instead of stable version.
+
+       [1m-f[22m, [1m--force[0m
+              Remove a previously cached version and re-fetch.
+
+       [1m-v[22m, [1m--verbose[0m
+              Do a verbose VCS checkout, if the URL represents a VCS. This is useful for seeing if an existing VCS cache has been  up‐
+              dated.
+
+       [1m--retry[0m
+              Retry  if  downloading  fails  or re-download if the checksum of a previously cached version no longer matches. Tries at
+              most 5 times with exponential backoff.
+
+       [1m--deps [22mAlso download dependencies for any listed [4mformula[24m.
+
+       [1m-s[22m, [1m--build-from-source[0m
+              Download source packages rather than a bottle.
+
+       [1m--build-bottle[0m
+              Download source packages (for eventual bottling) rather than a bottle.
+
+       [1m--force-bottle[0m
+              Download a bottle if it exists for the current or newest version of macOS, even if it would not be used during installa‐
+              tion.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+   [1mformulae[0m
+       List all locally installable formulae including short names.
+
+   [1mgist-logs [22m[[4m[1moptions[24m[22m] [4m[1mformula[0m
+       Upload logs for a failed build of [4mformula[24m to a new Gist. Presents an error message if no logs are found.
+
+       [1m--with-hostname[0m
+              Include the hostname in the Gist.
+
+       [1m-n[22m, [1m--new-issue[0m
+              Automatically create a new issue in the appropriate GitHub repository after creating the Gist.
+
+       [1m-p[22m, [1m--private[0m
+              The Gist will be marked private and will not appear in listings but will be accessible with its link.
+
+   [1mhelp [22m[[4m[1mcommand[24m [22m...]
+       Outputs the usage instructions for [1mbrew [4m[22mcommand[24m. Equivalent to [1mbrew --help [4m[22mcommand[24m.
+
+   [1mhome, homepage [22m[[1m--formula[22m] [[1m--cask[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       Open a [4mformula[24m or [4mcask[24m’s homepage in a browser, or open Homebrew’s own homepage if no argument is provided.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+   [1minfo, abv [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       Display brief statistics for your Homebrew installation. If a [4mformula[24m or [4mcask[24m is provided, show summary  of  information  about
+       it.
+
+       [1m--analytics[0m
+              List  global  Homebrew  analytics data or, if specified, installation and build error data for [4mformula[24m (provided neither
+              [1m$HOMEBREW_NO_ANALYTICS [22mnor [1m$HOMEBREW_NO_GITHUB_API [22mare set).
+
+       [1m--days [22mHow many days of analytics data to retrieve. The value for [4mdays[24m must be [1m30[22m, [1m90 [22mor [1m365[22m. The default is [1m30[22m.
+
+       [1m--category[0m
+              Which type of analytics data to retrieve. The value for [4mcategory[24m must be  [1minstall[22m,  [1minstall-on-request  [22mor  [1mbuild-error[22m;
+              [1mcask-install [22mor [1mos-version [22mmay be specified if [4mformula[24m is not. The default is [1minstall[22m.
+
+       [1m--github[0m
+              Open the GitHub source page for [4mformula[24m and [4mcask[24m in a browser. To view the history locally: [1mbrew log -p [4m[22mformula[24m or [4mcask[0m
+
+       [1m--fetch-manifest[0m
+              Fetch GitHub Packages manifest for extra information when [4mformula[24m is not installed.
+
+       [1m--json [22mPrint a JSON representation. Currently the default value for [4mversion[24m is [1mv1 [22mfor [4mformula[24m. For [4mformula[24m and [4mcask[24m use [1mv2[22m. See
+              the docs for examples of using the JSON output: ]8;;https://docs.brew.sh/Querying-Brew\https://docs.brew.sh/Querying-Brew]8;;\
+
+       [1m--installed[0m
+              Print JSON of formulae that are currently installed.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not, to print their JSON.
+
+       [1m--variations[0m
+              Include the variations hash in each formula’s JSON output.
+
+       [1m-v[22m, [1m--verbose[0m
+              Show more verbose analytics data for [4mformula[24m.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+       [1m--sizes[0m
+              Show the size of installed formulae and casks.
+
+   [1minstall [22m[[4m[1moptions[24m[22m] [4m[1mformula[24m[22m|[4m[1mcask[24m [22m[...]
+       Install a [4mformula[24m or [4mcask[24m. Additional options specific to a [4mformula[24m may be appended to the command.
+
+       Unless  [1m$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK  [22mis set, [1mbrew upgrade [22mor [1mbrew reinstall [22mwill be run for outdated dependents and
+       dependents with broken linkage, respectively.
+
+       Unless [1m$HOMEBREW_NO_INSTALL_CLEANUP [22mis set, [1mbrew cleanup [22mwill then be run for the installed formulae or, every 30 days, for all
+       formulae.
+
+       Unless [1m$HOMEBREW_NO_INSTALL_UPGRADE [22mis set, [1mbrew install [4m[22mformula[24m will upgrade [4mformula[24m if it is already installed but outdated.
+
+       [1m-d[22m, [1m--debug[0m
+              If brewing fails, open an interactive debugging session with access to IRB or a shell inside the temporary build  direc‐
+              tory.
+
+       [1m--display-times[0m
+              Print  install  times  for  each package at the end of the run. Enabled by default if [1m$HOMEBREW_DISPLAY_INSTALL_TIMES [22mis
+              set.
+
+       [1m-f[22m, [1m--force[0m
+              Install formulae without checking for previously installed keg-only or non-migrated  versions.  When  installing  casks,
+              overwrite existing files (binaries and symlinks are excluded, unless originally from the same cask).
+
+       [1m-v[22m, [1m--verbose[0m
+              Print the verification and post-install steps.
+
+       [1m-n[22m, [1m--dry-run[0m
+              Show what would be installed, but do not actually install anything.
+
+       [1m--ask  [22mAsk  for confirmation before downloading and installing formulae. Print download and install sizes of bottles and depen‐
+              dencies. Enabled by default if [1m$HOMEBREW_ASK [22mis set.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--ignore-dependencies[0m
+              An unsupported Homebrew development option to skip installing any dependencies of any kind. If the dependencies are  not
+              already  present,  the  formula will have issues. If you’re not developing Homebrew, consider adjusting your PATH rather
+              than using this option.
+
+       [1m--only-dependencies[0m
+              Install the dependencies with specified options but do not install the formula itself.
+
+       [1m--cc   [22mAttempt to compile using the specified [4mcompiler[24m, which should be the name of the compiler’s executable, e.g.  [1mgcc-9  [22mfor
+              GCC  9.  In  order  to use LLVM’s clang, specify [1mllvm_clang[22m. To use the Apple-provided clang, specify [1mclang[22m. This option
+              will only accept compilers that are provided by Homebrew or bundled with macOS. Please do not file  issues  if  you  en‐
+              counter errors while using this option.
+
+       [1m-s[22m, [1m--build-from-source[0m
+              Compile  [4mformula[24m from source even if a bottle is provided. Dependencies will still be installed from bottles if they are
+              available.
+
+       [1m--force-bottle[0m
+              Install from a bottle if it exists for the current or newest version of macOS, even if it would not normally be used for
+              installation.
+
+       [1m--include-test[0m
+              Install testing dependencies required to run [1mbrew test [4m[22mformula[24m.
+
+       [1m--HEAD [22mIf [4mformula[24m defines it, install the HEAD version, aka. main, trunk, unstable, master.
+
+       [1m--fetch-HEAD[0m
+              Fetch the upstream repository to detect if the HEAD installation of the formula is outdated. Otherwise, the repository’s
+              HEAD will only be checked for updates when a new stable or development version has been released.
+
+       [1m--keep-tmp[0m
+              Retain the temporary files created during installation.
+
+       [1m--debug-symbols[0m
+              Generate debug symbols on build. Source will be retained in a cache directory.
+
+       [1m--build-bottle[0m
+              Prepare the formula for eventual bottling during installation, skipping any post-install steps.
+
+       [1m--skip-post-install[0m
+              Install but skip any post-install steps.
+
+       [1m--skip-link[0m
+              Install but skip linking the keg into the prefix.
+
+       [1m--as-dependency[0m
+              Install but mark as installed as a dependency and not installed on request.
+
+       [1m--bottle-arch[0m
+              Optimise bottles for the specified architecture rather than the oldest architecture supported by the  version  of  macOS
+              the bottles are built on.
+
+       [1m-i[22m, [1m--interactive[0m
+              Download  and  patch  [4mformula[24m, then open a shell. This allows the user to run [1m./configure --help [22mand otherwise determine
+              how to turn the software package into a Homebrew package.
+
+       [1m-g[22m, [1m--git[0m
+              Create a Git repository, useful for creating patches to the software.
+
+       [1m--overwrite[0m
+              Delete files that already exist in the prefix while linking.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+       [1m--[no-]binaries[0m
+              Disable/enable linking of helper executables (default: enabled). Enabled by default if  [1m$HOMEBREW_CASK_OPTS_BINARIES  [22mis
+              set.
+
+       [1m--require-sha[0m
+              Require all casks to have a checksum. Enabled by default if [1m$HOMEBREW_CASK_OPTS_REQUIRE_SHA [22mis set.
+
+       [1m--adopt[0m
+              Adopt  existing  artifacts  in  the  destination  that  are  identical to those being installed. Cannot be combined with
+              [1m--force[22m.
+
+       [1m--skip-cask-deps[0m
+              Skip installing cask dependencies.
+
+       [1m--zap  [22mFor use with [1mbrew reinstall --cask[22m. Remove all files associated with a cask. [4mMay[24m [4mremove[24m [4mfiles[24m [4mwhich[24m [4mare[24m  [4mshared[24m  [4mbetween[0m
+              [4mapplications.[0m
+
+   [1mleaves [22m[[1m--installed-on-request[22m] [[1m--installed-as-dependency[22m]
+       List installed formulae that are not dependencies of another installed formula or cask.
+
+       [1m-r[22m, [1m--installed-on-request[0m
+              Only list leaves that were manually installed.
+
+       [1m-p[22m, [1m--installed-as-dependency[0m
+              Only list leaves that were installed as dependencies.
+
+   [1mlink, ln [22m[[4m[1moptions[24m[22m] [4m[1minstalled_formula[24m [22m[...]
+       Symlink  all  of [4mformula[24m’s installed files into Homebrew’s prefix. This is done automatically when you install formulae but can
+       be useful for manual installations.
+
+       [1m--overwrite[0m
+              Delete files that already exist in the prefix while linking.
+
+       [1m-n[22m, [1m--dry-run[0m
+              List files which would be linked or deleted by [1mbrew link --overwrite [22mwithout actually linking or deleting any files.
+
+       [1m-f[22m, [1m--force[0m
+              Allow keg-only formulae to be linked.
+
+       [1m--HEAD [22mLink the HEAD version of the formula if it is installed.
+
+   [1mlist, ls [22m[[4m[1moptions[24m[22m] [[4m[1minstalled_formula[24m[22m|[4m[1minstalled_cask[24m [22m...]
+       List all installed formulae and casks. If [4mformula[24m is provided, summarise the paths within its current keg. If [4mcask[24m is provided,
+       list its artifacts.
+
+       [1m--formula[0m
+              List only formulae, or treat all named arguments as formulae.
+
+       [1m--cask [22mList only casks, or treat all named arguments as casks.
+
+       [1m--full-name[0m
+              Print formulae with fully-qualified names. Unless [1m--full-name[22m, [1m--versions [22mor [1m--pinned [22mare passed,  other  options  (i.e.
+              [1m-1[22m, [1m-l[22m, [1m-r [22mand [1m-t[22m) are passed to [1mls[22m(1) which produces the actual output.
+
+       [1m--versions[0m
+              Show the version number for installed formulae, or only the specified formulae if [4mformula[24m are provided.
+
+       [1m--multiple[0m
+              Only show formulae with multiple versions installed.
+
+       [1m--pinned[0m
+              List only pinned formulae, or only the specified (pinned) formulae if [4mformula[24m are provided. See also [1mpin[22m, [1munpin[22m.
+
+       [1m--installed-on-request[0m
+              List the formulae installed on request.
+
+       [1m--installed-as-dependency[0m
+              List the formulae installed as dependencies.
+
+       [1m--poured-from-bottle[0m
+              List the formulae installed from a bottle.
+
+       [1m--built-from-source[0m
+              List the formulae compiled from source.
+
+       [1m-1     [22mForce output to be one entry per line. This is the default when output is not to a terminal.
+
+       [1m-l     [22mList formulae and/or casks in long format. Has no effect when a formula or cask name is passed as an argument.
+
+       [1m-r     [22mReverse  the order of formula and/or cask sorting to list the oldest entries first. Has no effect when a formula or cask
+              name is passed as an argument.
+
+       [1m-t     [22mSort formulae and/or casks by time modified, listing most recently modified first. Has no effect when a formula or  cask
+              name is passed as an argument.
+
+   [1mlog [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m[22m]
+       Show the [1mgit log [22mfor [4mformula[24m or [4mcask[24m, or show the log for the Homebrew repository if no formula or cask is provided.
+
+       [1m-p[22m, [1m--patch[0m
+              Also print patch from commit.
+
+       [1m--stat [22mAlso print diffstat from commit.
+
+       [1m--oneline[0m
+              Print only one line per commit.
+
+       [1m-1     [22mPrint only one commit.
+
+       [1m-n[22m, [1m--max-count[0m
+              Print only a specified number of commits.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+   [1mmcp-server [22m[[1m--debug[22m]
+       Starts the Homebrew MCP (Model Context Protocol) server.
+
+       [1m-d[22m, [1m--debug[0m
+              Enable debug logging to stderr.
+
+   [1mmigrate [22m[[4m[1moptions[24m[22m] [4m[1minstalled_formula[24m[22m|[4m[1minstalled_cask[24m [22m[...]
+       Migrate renamed packages to new names, where [4mformula[24m are old names of packages.
+
+       [1m-f[22m, [1m--force[0m
+              Treat installed [4mformula[24m and provided [4mformula[24m as if they are from the same taps and migrate them anyway.
+
+       [1m-n[22m, [1m--dry-run[0m
+              Show what would be migrated, but do not actually migrate anything.
+
+       [1m--formula[0m
+              Only migrate formulae.
+
+       [1m--cask [22mOnly migrate casks.
+
+   [1mmissing [22m[[1m--hide=[22m] [[4m[1mformula[24m [22m...]
+       Check  the  given  [4mformula[24m kegs for missing dependencies. If no [4mformula[24m are provided, check all kegs. Will exit with a non-zero
+       status if any kegs are found to be missing dependencies.
+
+       [1m--hide [22mAct as if none of the specified [4mhidden[24m are installed. [4mhidden[24m should be a comma-separated list of formulae.
+
+   [1mnodenv-sync[0m
+       Create symlinks for Homebrew’s installed NodeJS versions in [1m~/.nodenv/versions[22m.
+
+       Note that older version symlinks will also be created so e.g. NodeJS 19.1.0 will also be symlinked to 19.0.0.
+
+   [1moptions [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m [22m...]
+       Show install options specific to [4mformula[24m.
+
+       [1m--compact[0m
+              Show all options on a single line separated by spaces.
+
+       [1m--installed[0m
+              Show options for formulae that are currently installed.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not, to show their options. Enabled by default if [1m$HOME‐[0m
+              [1mBREW_EVAL_ALL [22mis set.
+
+       [1m--command[0m
+              Show options for the specified [4mcommand[24m.
+
+   [1moutdated [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       List installed casks and formulae that have an updated version available. By default, version information is displayed  in  in‐
+       teractive shells and suppressed otherwise.
+
+       [1m-q[22m, [1m--quiet[0m
+              List only the names of outdated kegs (takes precedence over [1m--verbose[22m).
+
+       [1m-v[22m, [1m--verbose[0m
+              Include detailed version information.
+
+       [1m--formula[0m
+              List only outdated formulae.
+
+       [1m--cask [22mList only outdated casks.
+
+       [1m--json [22mPrint output in JSON format. There are two versions: [1mv1 [22mand [1mv2[22m. [1mv1 [22mis deprecated and is currently the default if no ver‐
+              sion is specified. [1mv2 [22mprints outdated formulae and casks.
+
+       [1m--fetch-HEAD[0m
+              Fetch the upstream repository to detect if the HEAD installation of the formula is outdated. Otherwise, the repository’s
+              HEAD will only be checked for updates when a new stable or development version has been released.
+
+       [1m-g[22m, [1m--greedy[0m
+              Also include outdated casks with [1mauto_updates true [22mor [1mversion :latest[22m. Enabled by default if [1m$HOMEBREW_UPGRADE_GREEDY [22mis
+              set.
+
+       [1m--greedy-latest[0m
+              Also include outdated casks including those with [1mversion :latest[22m.
+
+       [1m--greedy-auto-updates[0m
+              Also include outdated casks including those with [1mauto_updates true[22m.
+
+   [1mpin [4minstalled_formula[24m [22m[...]
+       Pin the specified [4mformula[24m, preventing them from being upgraded when issuing the [1mbrew upgrade [4m[22mformula[24m command. See also [1munpin[22m.
+
+       [4mNote:[24m Other packages which depend on newer versions of a pinned formula might not install or run correctly.
+
+   [1mpostinstall, post_install [4minstalled_formula[24m [22m[...]
+       Rerun the post-install steps for [4mformula[24m.
+
+   [1mpyenv-sync[0m
+       Create symlinks for Homebrew’s installed Python versions in [1m~/.pyenv/versions[22m.
+
+       Note  that older patch version symlinks will be created and linked to the minor version so e.g. Python 3.11.0 will also be sym‐
+       linked to 3.11.3.
+
+   [1mrbenv-sync[0m
+       Create symlinks for Homebrew’s installed Ruby versions in [1m~/.rbenv/versions[22m.
+
+       Note that older version symlinks will also be created so e.g. Ruby 3.2.1 will also be symlinked to 3.2.0.
+
+   [1mreadall [22m[[4m[1moptions[24m[22m] [[4m[1mtap[24m [22m...]
+       Import all items from the specified [4mtap[24m, or from all installed taps if none is provided. This can be useful for  debugging  is‐
+       sues  across  all items when making significant changes to [1mformula.rb[22m, testing the performance of loading all items or checking
+       if any current formulae/casks have Ruby issues.
+
+       [1m--os   [22mRead using the given operating system. (Pass [1mall [22mto simulate all operating systems.)
+
+       [1m--arch [22mRead using the given CPU architecture. (Pass [1mall [22mto simulate all architectures.)
+
+       [1m--aliases[0m
+              Verify any alias symlinks in each tap.
+
+       [1m--syntax[0m
+              Syntax-check all of Homebrew’s Ruby files (if no [4mtap[24m is passed).
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not. Enabled by default if [1m$HOMEBREW_EVAL_ALL [22mis set.
+
+       [1m--no-simulate[0m
+              Don’t simulate other system configurations when checking formulae and casks.
+
+   [1mreinstall [22m[[4m[1moptions[24m[22m] [4m[1mformula[24m[22m|[4m[1mcask[24m [22m[...]
+       Uninstall and then reinstall a [4mformula[24m or [4mcask[24m using the same options it was originally installed with, plus any  appended  op‐
+       tions specific to a [4mformula[24m.
+
+       Unless  [1m$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK  [22mis set, [1mbrew upgrade [22mor [1mbrew reinstall [22mwill be run for outdated dependents and
+       dependents with broken linkage, respectively.
+
+       Unless [1m$HOMEBREW_NO_INSTALL_CLEANUP [22mis set, [1mbrew cleanup [22mwill then be run for the reinstalled formulae or, every 30  days,  for
+       all formulae.
+
+       [1m-d[22m, [1m--debug[0m
+              If  brewing fails, open an interactive debugging session with access to IRB or a shell inside the temporary build direc‐
+              tory.
+
+       [1m--display-times[0m
+              Print install times for each package at the end of the run. Enabled by  default  if  [1m$HOMEBREW_DISPLAY_INSTALL_TIMES  [22mis
+              set.
+
+       [1m-f[22m, [1m--force[0m
+              Install without checking for previously installed keg-only or non-migrated versions.
+
+       [1m-v[22m, [1m--verbose[0m
+              Print the verification and post-install steps.
+
+       [1m--ask  [22mAsk for confirmation before downloading and upgrading formulae. Print download, install and net install sizes of bottles
+              and dependencies. Enabled by default if [1m$HOMEBREW_ASK [22mis set.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m-s[22m, [1m--build-from-source[0m
+              Compile [4mformula[24m from source even if a bottle is available.
+
+       [1m-i[22m, [1m--interactive[0m
+              Download  and  patch  [4mformula[24m, then open a shell. This allows the user to run [1m./configure --help [22mand otherwise determine
+              how to turn the software package into a Homebrew package.
+
+       [1m--force-bottle[0m
+              Install from a bottle if it exists for the current or newest version of macOS, even if it would not normally be used for
+              installation.
+
+       [1m--keep-tmp[0m
+              Retain the temporary files created during installation.
+
+       [1m--debug-symbols[0m
+              Generate debug symbols on build. Source will be retained in a cache directory.
+
+       [1m-g[22m, [1m--git[0m
+              Create a Git repository, useful for creating patches to the software.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+       [1m--[no-]binaries[0m
+              Disable/enable linking of helper executables (default: enabled). Enabled by default if  [1m$HOMEBREW_CASK_OPTS_BINARIES  [22mis
+              set.
+
+       [1m--require-sha[0m
+              Require all casks to have a checksum. Enabled by default if [1m$HOMEBREW_CASK_OPTS_REQUIRE_SHA [22mis set.
+
+       [1m--adopt[0m
+              Adopt  existing  artifacts  in  the  destination  that  are  identical to those being installed. Cannot be combined with
+              [1m--force[22m.
+
+       [1m--skip-cask-deps[0m
+              Skip installing cask dependencies.
+
+       [1m--zap  [22mFor use with [1mbrew reinstall --cask[22m. Remove all files associated with a cask. [4mMay[24m [4mremove[24m [4mfiles[24m [4mwhich[24m [4mare[24m  [4mshared[24m  [4mbetween[0m
+              [4mapplications.[0m
+
+   [1msearch, -S [22m[[4m[1moptions[24m[22m] [4m[1mtext[24m[22m|[1m/[4mregex[24m/ [22m[...]
+       Perform  a  substring  search  of cask tokens and formula names for [4mtext[24m. If [4mtext[24m is flanked by slashes, it is interpreted as a
+       regular expression.
+
+       [1m--formula[0m
+              Search for formulae.
+
+       [1m--cask [22mSearch for casks.
+
+       [1m--desc [22mSearch for formulae with a description matching [4mtext[24m and casks with a name or description matching [4mtext[24m.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not, to search their descriptions. Enabled by default if
+              [1m$HOMEBREW_EVAL_ALL [22mis set.
+
+       [1m--pull-request[0m
+              Search for GitHub pull requests containing [4mtext[24m.
+
+       [1m--open [22mSearch for only open GitHub pull requests.
+
+       [1m--closed[0m
+              Search for only closed GitHub pull requests.
+
+       [1m--alpine[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--repology[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--macports[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--fink [22mSearch for [4mtext[24m in the given database.
+
+       [1m--opensuse[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--fedora[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--archlinux[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--debian[0m
+              Search for [4mtext[24m in the given database.
+
+       [1m--ubuntu[0m
+              Search for [4mtext[24m in the given database.
+
+   [1mservices [22m[[4m[1msubcommand[24m[22m]
+       Manage background services with macOS’ [1mlaunchctl[22m(1) daemon manager or Linux’s [1msystemctl[22m(1) service manager.
+
+       If [1msudo [22mis passed, operate on [1m/Library/LaunchDaemons [22mor [1m/usr/lib/systemd/system [22m(started at boot). Otherwise, operate on  [1m~/Li‐[0m
+       [1mbrary/LaunchAgents [22mor [1m~/.config/systemd/user [22m(started at login).
+
+       [[1msudo[22m] [1mbrew services [22m[[1mlist[22m] [[1m--json[22m] [[1m--debug[22m]
+              List  information  about  all  managed  services  for the current user (or root). Provides more output from Homebrew and
+              [1mlaunchctl[22m(1) or [1msystemctl[22m(1) if run with [1m--debug[22m.
+
+       [[1msudo[22m] [1mbrew services info [22m([4mformula[24m|[1m--all[22m) [[1m--json[22m]
+              List all managed services for the current user (or root).
+
+       [[1msudo[22m] [1mbrew services run [22m([4mformula[24m|[1m--all[22m) [[1m--file=[22m]
+              Run the service [4mformula[24m without registering to launch at login (or boot).
+
+       [[1msudo[22m] [1mbrew services start [22m([4mformula[24m|[1m--all[22m) [[1m--file=[22m]
+              Start the service [4mformula[24m immediately and register it to launch at login (or boot).
+
+       [[1msudo[22m] [1mbrew services stop [22m[[1m--keep[22m] [[1m--no-wait[22m|[1m--max-wait=[22m] ([4mformula[24m|[1m--all[22m)
+              Stop the service [4mformula[24m immediately and unregister it from launching at login (or boot), unless [1m--keep [22mis specified.
+
+       [[1msudo[22m] [1mbrew services kill [22m([4mformula[24m|[1m--all[22m)
+              Stop the service [4mformula[24m immediately but keep it registered to launch at login (or boot).
+
+       [[1msudo[22m] [1mbrew services restart [22m([4mformula[24m|[1m--all[22m) [[1m--file=[22m]
+              Stop (if necessary) and start the service [4mformula[24m immediately and register it to launch at login (or boot).
+
+       [[1msudo[22m] [1mbrew services cleanup[0m
+              Remove all unused services.
+
+       [1m--file [22mUse the service file from this location to [1mstart [22mthe service.
+
+       [1m--sudo-service-user[0m
+              When run as root on macOS, run the service(s) as this user.
+
+       [1m--max-wait[0m
+              Wait at most this many seconds for [1mstop [22mto finish stopping a service. Defaults to 60. Set this to zero  (0)  seconds  to
+              wait indefinitely.
+
+       [1m--no-wait[0m
+              Don’t wait for [1mstop [22mto finish stopping the service.
+
+       [1m--keep [22mWhen stopped, don’t unregister the service from launching at login (or boot).
+
+       [1m--all  [22mRun [4msubcommand[24m on all services.
+
+       [1m--json [22mOutput as JSON.
+
+   [1msetup-ruby [22m[[4m[1mcommand[24m [22m...]
+       Installs and configures Homebrew’s Ruby. If [1mcommand [22mis passed, it will only run Bundler if necessary for that command.
+
+   [1mshellenv [22m[[4m[1mshell[24m [22m...]
+       Valid shells: bash|csh|fish|pwsh|sh|tcsh|zsh
+
+       Print  export  statements.  When  run in a shell, this installation of Homebrew will be added to your [1m$PATH[22m, [1m$MANPATH[22m, and [1m$IN‐[0m
+       [1mFOPATH[22m.
+
+       The variables [1m$HOMEBREW_PREFIX[22m, [1m$HOMEBREW_CELLAR [22mand [1m$HOMEBREW_REPOSITORY [22mare also exported to  avoid  querying  them  multiple
+       times.  To  help  guarantee idempotence, this command produces no output when Homebrew’s [1mbin [22mand [1msbin [22mdirectories are first and
+       second respectively in your [1m$PATH[22m. Consider adding evaluation of this command’s output to your dotfiles  (e.g.  [1m~/.bash_profile[0m
+       or ~/.zprofile [1mon macOS and ~/.bashrc [22mor ~/.zshrc [1mon Linux) with: [22meval $(brew shellenv)`
+
+       The shell can be specified explicitly with a supported shell name parameter. Unknown shells will output POSIX exports.
+
+   [1mtab [22m[[4m[1moptions[24m[22m] [4m[1minstalled_formula[24m[22m|[4m[1minstalled_cask[24m [22m[...]
+       Edit tab information for installed formulae or casks.
+
+       This  can  be useful when you want to control whether an installed formula should be removed by [1mbrew autoremove[22m. To prevent re‐
+       moval, mark the formula as installed on request; to allow removal, mark the formula as not installed on request.
+
+       [1m--installed-on-request[0m
+              Mark [4minstalled_formula[24m or [4minstalled_cask[24m as installed on request.
+
+       [1m--no-installed-on-request[0m
+              Mark [4minstalled_formula[24m or [4minstalled_cask[24m as not installed on request.
+
+       [1m--formula[0m
+              Only mark formulae.
+
+       [1m--cask [22mOnly mark casks.
+
+   [1mtap [22m[[4m[1moptions[24m[22m] [[4m[1muser[24m/[4mrepo[24m[22m] [[4m[1mURL[24m[22m]
+       Tap a formula repository. If no arguments are provided, list all installed taps.
+
+       With [4mURL[24m unspecified, tap a formula repository from GitHub using HTTPS. Since so many taps are hosted on GitHub,  this  command
+       is a shortcut for [1mbrew tap [4m[22muser[24m[1m/[4m[22mrepo[24m [1mhttps://github.com/[4m[22muser[24m[1m/homebrew-[4m[22mrepo[24m.
+
+       With  [4mURL[24m specified, tap a formula repository from anywhere, using any transport protocol that [1mgit[22m(1) handles. The one-argument
+       form of [1mtap [22msimplifies but also limits. This two-argument command makes no assumptions, so taps can be cloned from places other
+       than GitHub and using protocols other than HTTPS, e.g. SSH, git, HTTP, FTP(S), rsync.
+
+       [1m--custom-remote[0m
+              Install or change a tap with a custom remote. Useful for mirrors.
+
+       [1m--repair[0m
+              Add missing symlinks to tap manpages and shell completions. Correct git remote refs for any  taps  where  upstream  HEAD
+              branch has been renamed.
+
+       [1m--eval-all[0m
+              Evaluate  all  formulae,  casks  and  aliases  in  the  new  tap  to  check their validity. Enabled by default if [1m$HOME‐[0m
+              [1mBREW_EVAL_ALL [22mis set.
+
+       [1m-f[22m, [1m--force[0m
+              Force install core taps even under API mode.
+
+   [1mtap-info [22m[[1m--installed[22m] [[1m--json[22m] [[4m[1mtap[24m [22m...]
+       Show detailed information about one or more [4mtap[24ms. If no [4mtap[24m names are provided, display  brief  statistics  for  all  installed
+       taps.
+
+       [1m--installed[0m
+              Show information on each installed tap.
+
+       [1m--json [22mPrint  a  JSON  representation of [4mtap[24m. Currently the default and only accepted value for [4mversion[24m is [1mv1[22m. See the docs for
+              examples of using the JSON output: ]8;;https://docs.brew.sh/Querying-Brew\https://docs.brew.sh/Querying-Brew]8;;\
+
+   [1munalias [4malias[24m [22m[...]
+       Remove aliases.
+
+   [1muninstall, remove, rm [22m[[4m[1moptions[24m[22m] [4m[1minstalled_formula[24m[22m|[4m[1minstalled_cask[24m [22m[...]
+       Uninstall a [4mformula[24m or [4mcask[24m.
+
+       [1m-f[22m, [1m--force[0m
+              Delete all installed versions of [4mformula[24m. Uninstall even if [4mcask[24m is not installed, overwrite existing files  and  ignore
+              errors when removing files.
+
+       [1m--zap  [22mRemove all files associated with a [4mcask[24m. [4mMay[24m [4mremove[24m [4mfiles[24m [4mwhich[24m [4mare[24m [4mshared[24m [4mbetween[24m [4mapplications.[0m
+
+       [1m--ignore-dependencies[0m
+              Don’t fail uninstall, even if [4mformula[24m is a dependency of any installed formulae.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae.
+
+       [1m--cask [22mTreat all named arguments as casks.
+
+   [1munlink [22m[[1m--dry-run[22m] [4m[1minstalled_formula[24m [22m[...]
+       Remove symlinks for [4mformula[24m from Homebrew’s prefix. This can be useful for temporarily disabling a formula: [1mbrew unlink [4m[22mformula[0m
+       [1m&& [4m[22mcommands[24m [1m&& brew link [4m[22mformula[0m
+
+       [1m-n[22m, [1m--dry-run[0m
+              List files which would be unlinked without actually unlinking or deleting any files.
+
+   [1munpin [4minstalled_formula[24m [22m[...]
+       Unpin [4mformula[24m, allowing them to be upgraded by [1mbrew upgrade [4m[22mformula[24m. See also [1mpin[22m.
+
+   [1muntap [22m[[1m--force[22m] [4m[1mtap[24m [22m[...]
+       Remove a tapped formula repository.
+
+       [1m-f[22m, [1m--force[0m
+              Untap even if formulae or casks from this tap are currently installed.
+
+   [1mupdate, up [22m[[4m[1moptions[24m[22m]
+       Fetch the newest version of Homebrew and all formulae from GitHub using [1mgit[22m(1) and perform any necessary migrations.
+
+       [1m--merge[0m
+              Use [1mgit merge [22mto apply updates (rather than [1mgit rebase[22m).
+
+       [1m--auto-update[0m
+              Run on auto-updates (e.g. before [1mbrew install[22m). Skips some slower steps.
+
+       [1m-f[22m, [1m--force[0m
+              Always do a slower, full update check (even if unnecessary).
+
+       [1m-v[22m, [1m--verbose[0m
+              Print the directories checked and [1mgit [22moperations performed.
+
+       [1m-d[22m, [1m--debug[0m
+              Display a trace of all shell commands as they are executed.
+
+   [1mupdate-if-needed[0m
+       Runs  [1mbrew  update --auto-update [22monly if needed. This is a good replacement for [1mbrew update [22min scripts where you want the no-op
+       case to be both possible and really fast.
+
+   [1mupdate-reset [22m[[4m[1mrepository[24m [22m...]
+       Fetch and reset Homebrew and all tap repositories (or any specified [4mrepository[24m) using [1mgit[22m(1) to their latest [1morigin/HEAD[22m.
+
+       [4mNote:[24m this will destroy all your uncommitted or committed changes.
+
+   [1mupgrade [22m[[4m[1moptions[24m[22m] [[4m[1minstalled_formula[24m[22m|[4m[1minstalled_cask[24m [22m...]
+       Upgrade outdated casks and outdated, unpinned formulae using the same options they were originally installed with, plus any ap‐
+       pended brew formula options. If [4mcask[24m or [4mformula[24m are specified, upgrade only the given [4mcask[24m or [4mformula[24m  kegs  (unless  they  are
+       pinned; see [1mpin[22m, [1munpin[22m).
+
+       Unless  [1m$HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK  [22mis set, [1mbrew upgrade [22mor [1mbrew reinstall [22mwill be run for outdated dependents and
+       dependents with broken linkage, respectively.
+
+       Unless [1m$HOMEBREW_NO_INSTALL_CLEANUP [22mis set, [1mbrew cleanup [22mwill then be run for the upgraded formulae or, every 30 days, for  all
+       formulae.
+
+       [1m-d[22m, [1m--debug[0m
+              If  brewing fails, open an interactive debugging session with access to IRB or a shell inside the temporary build direc‐
+              tory.
+
+       [1m--display-times[0m
+              Print install times for each package at the end of the run. Enabled by  default  if  [1m$HOMEBREW_DISPLAY_INSTALL_TIMES  [22mis
+              set.
+
+       [1m-f[22m, [1m--force[0m
+              Install  formulae  without  checking  for previously installed keg-only or non-migrated versions. When installing casks,
+              overwrite existing files (binaries and symlinks are excluded, unless originally from the same cask).
+
+       [1m-v[22m, [1m--verbose[0m
+              Print the verification and post-install steps.
+
+       [1m-n[22m, [1m--dry-run[0m
+              Show what would be upgraded, but do not actually upgrade anything.
+
+       [1m--ask  [22mAsk for confirmation before downloading and upgrading formulae. Print download, install and net install sizes of bottles
+              and dependencies. Enabled by default if [1m$HOMEBREW_ASK [22mis set.
+
+       [1m--formula[0m
+              Treat all named arguments as formulae. If no named arguments are specified, upgrade only outdated formulae.
+
+       [1m-s[22m, [1m--build-from-source[0m
+              Compile [4mformula[24m from source even if a bottle is available.
+
+       [1m-i[22m, [1m--interactive[0m
+              Download and patch [4mformula[24m, then open a shell. This allows the user to run [1m./configure --help  [22mand  otherwise  determine
+              how to turn the software package into a Homebrew package.
+
+       [1m--force-bottle[0m
+              Install from a bottle if it exists for the current or newest version of macOS, even if it would not normally be used for
+              installation.
+
+       [1m--fetch-HEAD[0m
+              Fetch the upstream repository to detect if the HEAD installation of the formula is outdated. Otherwise, the repository’s
+              HEAD will only be checked for updates when a new stable or development version has been released.
+
+       [1m--keep-tmp[0m
+              Retain the temporary files created during installation.
+
+       [1m--debug-symbols[0m
+              Generate debug symbols on build. Source will be retained in a cache directory.
+
+       [1m--overwrite[0m
+              Delete files that already exist in the prefix while linking.
+
+       [1m--cask [22mTreat all named arguments as casks. If no named arguments are specified, upgrade only outdated casks.
+
+       [1m--skip-cask-deps[0m
+              Skip installing cask dependencies.
+
+       [1m-g[22m, [1m--greedy[0m
+              Also include casks with [1mauto_updates true [22mor [1mversion :latest[22m. Enabled by default if [1m$HOMEBREW_UPGRADE_GREEDY [22mis set.
+
+       [1m--greedy-latest[0m
+              Also include casks with [1mversion :latest[22m.
+
+       [1m--greedy-auto-updates[0m
+              Also include casks with [1mauto_updates true[22m.
+
+       [1m--[no-]binaries[0m
+              Disable/enable  linking  of helper executables (default: enabled). Enabled by default if [1m$HOMEBREW_CASK_OPTS_BINARIES [22mis
+              set.
+
+       [1m--require-sha[0m
+              Require all casks to have a checksum. Enabled by default if [1m$HOMEBREW_CASK_OPTS_REQUIRE_SHA [22mis set.
+
+   [1muses [22m[[4m[1moptions[24m[22m] [4m[1mformula[24m [22m[...]
+       Show formulae and casks that specify [4mformula[24m as a dependency; that is, show dependents of [4mformula[24m. When given multiple  formula
+       arguments,  show the intersection of formulae that use [4mformula[24m. By default, [1muses [22mshows all formulae and casks that specify [4mfor‐[0m
+       [4mmula[24m as a required or recommended dependency for their stable builds.
+
+       [4mNote:[24m [1m--missing [22mand [1m--skip-recommended [22mhave precedence over [1m--include-*[22m.
+
+       [1m--recursive[0m
+              Resolve more than one level of dependencies.
+
+       [1m--installed[0m
+              Only list formulae and casks that are currently installed.
+
+       [1m--missing[0m
+              Only list formulae and casks that are not currently installed.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not, to show their dependents.  Enabled  by  default  if
+              [1m$HOMEBREW_EVAL_ALL [22mis set.
+
+       [1m--include-implicit[0m
+              Include formulae that have [4mformula[24m as an implicit dependency for downloading and unpacking source files.
+
+       [1m--include-build[0m
+              Include formulae that specify [4mformula[24m as a [1m:build [22mdependency.
+
+       [1m--include-test[0m
+              Include formulae that specify [4mformula[24m as a [1m:test [22mdependency.
+
+       [1m--include-optional[0m
+              Include formulae that specify [4mformula[24m as an [1m:optional [22mdependency.
+
+       [1m--skip-recommended[0m
+              Skip all formulae that specify [4mformula[24m as a [1m:recommended [22mdependency.
+
+       [1m--formula[0m
+              Include only formulae.
+
+       [1m--cask [22mInclude only casks.
+
+   [1mwhich-formula [22m[[1m--explain[22m] [[1m--skip-update[22m] [4m[1mcommand[24m [22m[...]
+       Show which formula(e) provides the given command.
+
+       [1m--explain[0m
+              Output explanation of how to get [4mcommand[24m by installing one of the providing formulae.
+
+       [1m--skip-update[0m
+              Skip updating the executables database if any version exists on disk, no matter how old.
+
+   [1m--cache [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       Display Homebrew’s download cache. See also [1m$HOMEBREW_CACHE[22m.
+
+       If a [4mformula[24m or [4mcask[24m is provided, display the file or directory used to cache it.
+
+       [1m--os   [22mShow cache file for the given operating system. (Pass [1mall [22mto show cache files for all operating systems.)
+
+       [1m--arch [22mShow cache file for the given CPU architecture. (Pass [1mall [22mto show cache files for all architectures.)
+
+       [1m-s[22m, [1m--build-from-source[0m
+              Show the cache file used when building from source.
+
+       [1m--force-bottle[0m
+              Show the cache file used when pouring a bottle.
+
+       [1m--bottle-tag[0m
+              Show the cache file used when pouring a bottle for the given tag.
+
+       [1m--HEAD [22mShow the cache file used when building from HEAD.
+
+       [1m--formula[0m
+              Only show cache files for formulae.
+
+       [1m--cask [22mOnly show cache files for casks.
+
+   [1m--caskroom [22m[[4m[1mcask[24m [22m...]
+       Display Homebrew’s Caskroom path.
+
+       If  [4mcask[24m  is provided, display the location in the Caskroom where [4mcask[24m would be installed, without any sort of versioned direc‐
+       tory as the last path.
+
+   [1m--cellar [22m[[4m[1mformula[24m [22m...]
+       Display Homebrew’s Cellar path. [4mDefault:[24m [1m$(brew --prefix)/Cellar[22m, or if that directory doesn’t exist, [1m$(brew --repository)/Cel‐[0m
+       [1mlar[22m.
+
+       If [4mformula[24m is provided, display the location in the Cellar where [4mformula[24m would be installed, without any sort of versioned  di‐
+       rectory as the last path.
+
+   [1m--env, environment [22m[[1m--shell=[22m] [[1m--plain[22m] [[4m[1mformula[24m [22m...]
+       Summarise Homebrew’s build environment as a plain list.
+
+       If  the  command’s  output is sent through a pipe and no shell is specified, the list is formatted for export to [1mbash[22m(1) unless
+       [1m--plain [22mis passed.
+
+       [1m--shell[0m
+              Generate a list of environment variables for the specified shell, or [1m--shell=auto [22mto detect the current shell.
+
+       [1m--plain[0m
+              Generate plain output even when piped.
+
+   [1m--prefix [22m[[1m--unbrewed[22m] [[1m--installed[22m] [[4m[1mformula[24m [22m...]
+       Display Homebrew’s install path. [4mDefault:[0m
+
+       •   macOS ARM: [1m/opt/homebrew[0m
+
+       •   macOS Intel: [1m/usr/local[0m
+
+       •   Linux: [1m/home/linuxbrew/.linuxbrew[0m
+
+       If [4mformula[24m is provided, display the location where [4mformula[24m is or would be installed.
+
+       [1m--unbrewed[0m
+              List files in Homebrew’s prefix not installed by Homebrew.
+
+       [1m--installed[0m
+              Outputs nothing and returns a failing status code if [4mformula[24m is not installed.
+
+   [1m--repository, --repo [22m[[4m[1mtap[24m [22m...]
+       Display where Homebrew’s Git repository is located.
+
+       If [4muser[24m[1m/[4m[22mrepo[24m are provided, display where tap [4muser[24m[1m/[4m[22mrepo[24m’s directory is located.
+
+   [1m--taps[0m
+       Display the path to Homebrew’s Taps directory.
+
+   [1m--version, -v[0m
+       Print the version numbers of Homebrew, Homebrew/homebrew-core and Homebrew/homebrew-cask (if tapped) to standard output.
+
+[1mDEVELOPER COMMANDS[0m
+   [1maudit [22m[[4m[1moptions[24m[22m] [[4m[1mformula[24m[22m|[4m[1mcask[24m [22m...]
+       Check [4mformula[24m or [4mcask[24m for Homebrew coding style violations. This should be run before submitting a new formula or cask.  If  no
+       [4mformula[24m  or  [4mcask[24m are provided, check all locally available formulae and casks and skip style checks. Will exit with a non-zero
+       status if any errors are found.
+
+       [1m--os   [22mAudit the given operating system. (Pass [1mall [22mto audit all operating systems.)
+
+       [1m--arch [22mAudit the given CPU architecture. (Pass [1mall [22mto audit all architectures.)
+
+       [1m--strict[0m
+              Run additional, stricter style checks.
+
+       [1m--git  [22mRun additional, slower style checks that navigate the Git repository.
+
+       [1m--online[0m
+              Run additional, slower style checks that require a network connection.
+
+       [1m--installed[0m
+              Only check formulae and casks that are currently installed.
+
+       [1m--eval-all[0m
+              Evaluate all available formulae and casks, whether installed or not,  to  audit  them.  Enabled  by  default  if  [1m$HOME‐[0m
+              [1mBREW_EVAL_ALL [22mis set.
+
+       [1m--new  [22mRun  various additional style checks to determine if a new formula or cask is eligible for Homebrew. This should be used
+              when creating new formulae or casks and implies [1m--strict [22mand [1m--online[22m.
+
+       [1m--[no-]signing[0m
+              Audit for app signatures, which are required by macOS on ARM.
+
+       [1m--changed[0m
+              Check files that were changed from the [1mmain [22mbranch.
+
+       [1m--tap  [22mCheck formulae and casks within the given tap, specified as [4muser[24m[1m/[4m[22mrepo[24m.
+
+       [1m--fix  [22mFix style violations automatically using RuboCop’s auto-correct feature.
+
+       [1m--display-filename[0m
+              Prefix every line of output with the file or formula name being audited,

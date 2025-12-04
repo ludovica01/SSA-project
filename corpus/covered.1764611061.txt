@@ -1,0 +1,230 @@
+/home/kali/Desktop/SSA-project/Lottery.sol
+  1 |     | pragma solidity ^0.8.22;
+  2 |     | // SPDX-License-Identifier: UNLICENSED
+  3 |     | import "Taxpayer.sol";
+  4 |     | 
+  5 |     | contract Lottery {
+  6 |     | address owner;
+  7 |     | mapping (address => bytes32) commits;
+  8 |     | mapping (address => uint) reveals;
+  9 |     | address[] revealed;
+ 10 |     | 
+ 11 |     | uint256 startTime;
+ 12 |     | uint256 revealTime;
+ 13 |     | uint256 endTime;
+ 14 |     | uint256 period;
+ 15 |     | bool iscontract;
+ 16 |     | 
+ 17 |     | // Initialize the registry with the lottery period.
+ 18 |     |  constructor(uint p) {
+ 19 |     |   period = p;
+ 20 |     |   startTime = 0;
+ 21 |     |   endTime = 0;
+ 22 |     |   iscontract=true;
+ 23 |     |  } 
+ 24 |     | 
+ 25 |     | 
+ 26 |     | //If the lottery has not started, anyone can invoke a lottery.
+ 27 |     | function startLottery() public {
+ 28 |     |   require (startTime == 0);
+ 29 |     |   //startTime current time. Users send their committed value
+ 30 |     |   startTime = block.timestamp;
+ 31 |     |   //revealTime  time for revealing. User reveal their value
+ 32 |     |   revealTime = startTime+period;
+ 33 |     |   //endTime a winner can be computed
+ 34 |     |   endTime = revealTime+period;
+ 35 |     | }
+ 36 |     | 
+ 37 |     | //A taxpayer send his own commitment. 
+ 38 |     | function commit(bytes32 y) public {
+ 39 |     |   require(block.timestamp >= startTime);
+ 40 |     |   commits[msg.sender] = y;
+ 41 |     | }
+ 42 |     | 
+ 43 |     | //A valid taxpayer who sent his own commitment, sends the revealing value.
+ 44 |     | function reveal(uint256 rev) public {
+ 45 |     |   require(block.timestamp >= revealTime);
+ 46 |     |   require(keccak256(abi.encode(rev))==commits[msg.sender]);
+ 47 |     |   revealed.push(msg.sender);
+ 48 |     |   reveals[msg.sender] = uint(rev);
+ 49 |     |   
+ 50 |     | }
+ 51 |     | 
+ 52 |     | //Ends the lottery and compute the winner.
+ 53 |     | function endLottery() public {
+ 54 |     |   require(block.timestamp >= endTime);
+ 55 |     |   uint total = 0;
+ 56 |     |   for (uint i = 0; i < revealed.length; i++)
+ 57 |     |     total+= reveals[revealed[i]];
+ 58 |     |   Taxpayer(revealed[total%revealed.length]).setTaxAllowance(7000);
+ 59 |     |   startTime = 0;
+ 60 |     |   revealTime=0;
+ 61 |     |   endTime = 0;
+ 62 |     | }
+ 63 |     |   function isContract() public view returns(bool) {
+ 64 |     |     return iscontract;
+ 65 |     |   }
+ 66 |     | 
+ 67 |     | }
+ 68 |     | 
+
+/home/kali/Desktop/SSA-project/Taxpayer.sol
+   1 |     | pragma solidity ^0.8.22;
+   2 |     | 
+   3 |     | import "Lottery.sol";
+   4 |     | 
+   5 | *   | contract Taxpayer {
+   6 |     | 
+   7 |     |  uint age; 
+   8 |     | 
+   9 |     |  bool isMarried; 
+  10 |     | 
+  11 |     |  bool iscontract;
+  12 |     | 
+  13 |     |  /* Reference to spouse if person is married, address(0) otherwise */
+  14 |     |  address spouse; 
+  15 |     | 
+  16 |     | 
+  17 |     | address  parent1; 
+  18 |     | address  parent2; 
+  19 |     | 
+  20 |     |  /* Constant default income tax allowance */
+  21 | *   |  uint constant  DEFAULT_ALLOWANCE = 5000;
+  22 |     | 
+  23 |     |  /* Constant income tax allowance for Older Taxpayers over 65 */
+  24 |     |   uint constant ALLOWANCE_OAP = 7000;
+  25 |     | 
+  26 |     |  /* Income tax allowance */
+  27 |     |  uint tax_allowance; 
+  28 |     | 
+  29 |     |  uint income; 
+  30 |     | 
+  31 |     | uint256 rev;
+  32 |     | 
+  33 |     | // getter methods
+  34 |     | function getIsMarried() public view returns(bool) {
+  35 |     |     return isMarried;
+  36 |     | }
+  37 |     | 
+  38 |     | function getSpouse() public view returns(address) {
+  39 |     |     return spouse;
+  40 |     | }
+  41 |     | 
+  42 |     | 
+  43 |     | //Parents are taxpayers
+  44 | *   |  constructor(address p1, address p2) {
+  45 | *   |    age = 0;
+  46 | *   |    isMarried = false;
+  47 | *   |    parent1 = p1;
+  48 | *   |    parent2 = p2;
+  49 | *   |    spouse = address(0);
+  50 | *   |    income = 0;
+  51 | *   |    tax_allowance = DEFAULT_ALLOWANCE;
+  52 | *   |    iscontract = true;
+  53 |     |  } 
+  54 |     | 
+  55 |     | 
+  56 |     |  //We require new_spouse != address(0);
+  57 | *   |  function marry(address new_spouse) public {
+  58 | *   |   spouse = new_spouse;
+  59 | *   |   isMarried = true;
+  60 |     |  }
+  61 |     |  
+  62 | *   |  function divorce() public {
+  63 | *   |   spouse = address(0);
+  64 | *   |   isMarried = false;
+  65 |     |  }
+  66 |     | 
+  67 |     |  /* Transfer part of tax allowance to own spouse */
+  68 |     |  function transferAllowance(uint change) public {
+  69 |     |   tax_allowance = tax_allowance - change;
+  70 |     |   Taxpayer sp = Taxpayer(address(spouse));
+  71 |     |   sp.setTaxAllowance(sp.getTaxAllowance()+change);
+  72 |     |  }
+  73 |     | 
+  74 |     |  function haveBirthday() public {
+  75 |     |   age++;
+  76 |     |  }
+  77 |     |  
+  78 |     |   function setTaxAllowance(uint ta) public {
+  79 |     |     require(Taxpayer(msg.sender).isContract() || Lottery(msg.sender).isContract());
+  80 |     |     tax_allowance = ta;
+  81 |     |   }
+  82 |     |   function getTaxAllowance() public view returns(uint) {
+  83 |     |     return tax_allowance;
+  84 |     |   }
+  85 |     |   function isContract() public view returns(bool){
+  86 |     |     return iscontract;
+  87 |     |   }
+  88 |     | 
+  89 |     |   function joinLottery(address lot, uint256 r) public {
+  90 |     |     Lottery l = Lottery(lot);
+  91 |     |     l.commit(keccak256(abi.encode(r)));
+  92 |     |     rev = r;
+  93 |     |   }
+  94 |     |    function revealLottery(address lot, uint256 r) public {
+  95 |     |     Lottery l = Lottery(lot);
+  96 |     |     l.reveal(r);
+  97 |     |     rev = 0;
+  98 |     |   }
+  99 |     | 
+ 100 |     | }
+ 101 |     | 
+
+/home/kali/Desktop/SSA-project/TestTaxPayerEchidna.sol
+  1 |     | // SPDX-License-Identifier: MIT
+  2 |     | pragma solidity ^0.8.22;
+  3 |     | 
+  4 |     | import "Taxpayer.sol";
+  5 |     | 
+  6 |     | 
+  7 | *   | contract TestHardness {
+  8 |     |     Taxpayer public t1;
+  9 | *   |     Taxpayer public t2;
+ 10 |     | 
+ 11 |     | 
+ 12 |     |     // constructor: create 2 Taxpayer with whatever addresses parent: address(0) is ok
+ 13 | *   |     constructor() {
+ 14 | *   |         t1 = new Taxpayer(address(0), address(0));
+ 15 | *   |         t2 = new Taxpayer(address(0), address(0));
+ 16 |     |     }
+ 17 |     | 
+ 18 |     |     // make marry t2 with t1 (using its address)
+ 19 | *   |     function t2_marry_t1()public {
+ 20 | *   |         t2.marry(address(t1));
+ 21 |     |     }
+ 22 |     | 
+ 23 |     | 
+ 24 |     |     // for divorce
+ 25 | *   |     function t2_divorce() public {
+ 26 | *   |         t2.divorce();
+ 27 |     |     }
+ 28 |     | 
+ 29 |     | 
+ 30 |     |     // ECHIDNA INVARIANT: if t1 is married, then its spouse has to point to t2
+ 31 |     |     // and if t2 is also married, its spouse has to point to t1
+ 32 |     |     // if they are not married, the condition is true as well
+ 33 |     |     function echidna_mutual_marriage() public view returns (bool) {
+ 34 |     |         // if t1 is married then its spouse address has to be t2's
+ 35 |     |         if(t1.getIsMarried()) {
+ 36 |     |             if(t1.getSpouse() != address(t2)) {
+ 37 |     |                 return false;
+ 38 |     |             }
+ 39 |     |         }
+ 40 |     | 
+ 41 |     |         // if t2 is married then its spouse address has to be t1's
+ 42 |     |         if(t2.getIsMarried()) {
+ 43 |     |             if(t2.getSpouse() != address(t1)) {
+ 44 |     |                 return false;
+ 45 |     |             }
+ 46 |     |         }
+ 47 |     | 
+ 48 |     |         return true;
+ 49 |     | 
+ 50 |     |     }
+ 51 |     | 
+ 52 |     | 
+ 53 |     | 
+ 54 |     | 
+ 55 |     | }
+

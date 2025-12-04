@@ -1,0 +1,242 @@
+<style> code { white-space: pre-wrap; display: block; background-color: #eee; }.executed { background-color: #afa; }.reverted { background-color: #ffa; }.unexecuted { background-color: #faa; }.neutral { background-color: #eee; }</style><b>/home/kali/Desktop/SSA-project/Lottery.sol</b>
+<code>
+  1 |     | <span class='neutral'>pragma solidity ^0.8.22;</span>
+  2 |     | <span class='neutral'>// SPDX-License-Identifier: UNLICENSED</span>
+  3 |     | <span class='neutral'>import &quot;Taxpayer.sol&quot;;</span>
+  4 |     | <span class='neutral'></span>
+  5 |     | <span class='unexecuted'>contract Lottery {</span>
+  6 |     | <span class='neutral'>address owner;</span>
+  7 |     | <span class='neutral'>mapping (address =&gt; bytes32) commits;</span>
+  8 |     | <span class='neutral'>mapping (address =&gt; uint) reveals;</span>
+  9 |     | <span class='neutral'>address[] revealed;</span>
+ 10 |     | <span class='neutral'></span>
+ 11 |     | <span class='neutral'>uint256 startTime;</span>
+ 12 |     | <span class='neutral'>uint256 revealTime;</span>
+ 13 |     | <span class='neutral'>uint256 endTime;</span>
+ 14 |     | <span class='neutral'>uint256 period;</span>
+ 15 |     | <span class='neutral'>bool iscontract;</span>
+ 16 |     | <span class='neutral'></span>
+ 17 |     | <span class='neutral'>// Initialize the registry with the lottery period.</span>
+ 18 |     | <span class='unexecuted'> constructor(uint p) {</span>
+ 19 |     | <span class='unexecuted'>  period = p;</span>
+ 20 |     | <span class='unexecuted'>  startTime = 0;</span>
+ 21 |     | <span class='unexecuted'>  endTime = 0;</span>
+ 22 |     | <span class='unexecuted'>  iscontract=true;</span>
+ 23 |     | <span class='neutral'> } </span>
+ 24 |     | <span class='neutral'></span>
+ 25 |     | <span class='neutral'></span>
+ 26 |     | <span class='neutral'>//If the lottery has not started, anyone can invoke a lottery.</span>
+ 27 |     | <span class='unexecuted'>function startLottery() public {</span>
+ 28 |     | <span class='unexecuted'>  require (startTime == 0);</span>
+ 29 |     | <span class='neutral'>  //startTime current time. Users send their committed value</span>
+ 30 |     | <span class='unexecuted'>  startTime = block.timestamp;</span>
+ 31 |     | <span class='neutral'>  //revealTime  time for revealing. User reveal their value</span>
+ 32 |     | <span class='unexecuted'>  revealTime = startTime+period;</span>
+ 33 |     | <span class='neutral'>  //endTime a winner can be computed</span>
+ 34 |     | <span class='unexecuted'>  endTime = revealTime+period;</span>
+ 35 |     | <span class='neutral'>}</span>
+ 36 |     | <span class='neutral'></span>
+ 37 |     | <span class='neutral'>//A taxpayer send his own commitment. </span>
+ 38 |     | <span class='unexecuted'>function commit(bytes32 y) public {</span>
+ 39 |     | <span class='unexecuted'>  require(block.timestamp &gt;= startTime);</span>
+ 40 |     | <span class='unexecuted'>  commits[msg.sender] = y;</span>
+ 41 |     | <span class='neutral'>}</span>
+ 42 |     | <span class='neutral'></span>
+ 43 |     | <span class='neutral'>//A valid taxpayer who sent his own commitment, sends the revealing value.</span>
+ 44 |     | <span class='unexecuted'>function reveal(uint256 rev) public {</span>
+ 45 |     | <span class='unexecuted'>  require(block.timestamp &gt;= revealTime);</span>
+ 46 |     | <span class='unexecuted'>  require(keccak256(abi.encode(rev))==commits[msg.sender]);</span>
+ 47 |     | <span class='unexecuted'>  revealed.push(msg.sender);</span>
+ 48 |     | <span class='unexecuted'>  reveals[msg.sender] = uint(rev);</span>
+ 49 |     | <span class='neutral'>  </span>
+ 50 |     | <span class='neutral'>}</span>
+ 51 |     | <span class='neutral'></span>
+ 52 |     | <span class='neutral'>//Ends the lottery and compute the winner.</span>
+ 53 |     | <span class='unexecuted'>function endLottery() public {</span>
+ 54 |     | <span class='unexecuted'>  require(block.timestamp &gt;= endTime);</span>
+ 55 |     | <span class='unexecuted'>  uint total = 0;</span>
+ 56 |     | <span class='unexecuted'>  for (uint i = 0; i &lt; revealed.length; i++)</span>
+ 57 |     | <span class='unexecuted'>    total+= reveals[revealed[i]];</span>
+ 58 |     | <span class='unexecuted'>  Taxpayer(revealed[total%revealed.length]).setTaxAllowance(7000);</span>
+ 59 |     | <span class='unexecuted'>  startTime = 0;</span>
+ 60 |     | <span class='unexecuted'>  revealTime=0;</span>
+ 61 |     | <span class='unexecuted'>  endTime = 0;</span>
+ 62 |     | <span class='neutral'>}</span>
+ 63 |     | <span class='unexecuted'>  function isContract() public view returns(bool) {</span>
+ 64 |     | <span class='unexecuted'>    return iscontract;</span>
+ 65 |     | <span class='neutral'>  }</span>
+ 66 |     | <span class='neutral'></span>
+ 67 |     | <span class='neutral'>}</span>
+ 68 |     | <span class='neutral'></span>
+
+</code>
+<br />
+
+<b>/home/kali/Desktop/SSA-project/Taxpayer.sol</b>
+<code>
+   1 |     | <span class='neutral'>pragma solidity ^0.8.22;</span>
+   2 |     | <span class='neutral'></span>
+   3 |     | <span class='neutral'>import &quot;Lottery.sol&quot;;</span>
+   4 |     | <span class='neutral'></span>
+   5 | *   | <span class='executed'>contract Taxpayer {</span>
+   6 |     | <span class='neutral'></span>
+   7 |     | <span class='neutral'> uint age; </span>
+   8 |     | <span class='neutral'></span>
+   9 |     | <span class='neutral'> bool isMarried; </span>
+  10 |     | <span class='neutral'></span>
+  11 |     | <span class='neutral'> bool iscontract;</span>
+  12 |     | <span class='neutral'></span>
+  13 |     | <span class='neutral'> /* Reference to spouse if person is married, address(0) otherwise */</span>
+  14 |     | <span class='neutral'> address spouse; </span>
+  15 |     | <span class='neutral'></span>
+  16 |     | <span class='neutral'></span>
+  17 |     | <span class='neutral'>address  parent1; </span>
+  18 |     | <span class='neutral'>address  parent2; </span>
+  19 |     | <span class='neutral'></span>
+  20 |     | <span class='neutral'> /* Constant default income tax allowance */</span>
+  21 | *   | <span class='executed'> uint constant  DEFAULT_ALLOWANCE = 5000;</span>
+  22 |     | <span class='neutral'></span>
+  23 |     | <span class='neutral'> /* Constant income tax allowance for Older Taxpayers over 65 */</span>
+  24 |     | <span class='neutral'>  uint constant ALLOWANCE_OAP = 7000;</span>
+  25 |     | <span class='neutral'></span>
+  26 |     | <span class='neutral'> /* Income tax allowance */</span>
+  27 |     | <span class='neutral'> uint tax_allowance; </span>
+  28 |     | <span class='neutral'></span>
+  29 |     | <span class='neutral'> uint income; </span>
+  30 |     | <span class='neutral'></span>
+  31 |     | <span class='neutral'>uint256 rev;</span>
+  32 |     | <span class='neutral'></span>
+  33 |     | <span class='neutral'>// getter methods</span>
+  34 |     | <span class='unexecuted'>function getIsMarried() public view returns(bool) {</span>
+  35 |     | <span class='unexecuted'>    return isMarried;</span>
+  36 |     | <span class='neutral'>}</span>
+  37 |     | <span class='neutral'></span>
+  38 |     | <span class='unexecuted'>function getSpouse() public view returns(address) {</span>
+  39 |     | <span class='unexecuted'>    return spouse;</span>
+  40 |     | <span class='neutral'>}</span>
+  41 |     | <span class='neutral'></span>
+  42 |     | <span class='neutral'></span>
+  43 |     | <span class='neutral'>//Parents are taxpayers</span>
+  44 | *   | <span class='executed'> constructor(address p1, address p2) {</span>
+  45 | *   | <span class='executed'>   age = 0;</span>
+  46 | *   | <span class='executed'>   isMarried = false;</span>
+  47 | *   | <span class='executed'>   parent1 = p1;</span>
+  48 | *   | <span class='executed'>   parent2 = p2;</span>
+  49 | *   | <span class='executed'>   spouse = address(0);</span>
+  50 | *   | <span class='executed'>   income = 0;</span>
+  51 | *   | <span class='executed'>   tax_allowance = DEFAULT_ALLOWANCE;</span>
+  52 | *   | <span class='executed'>   iscontract = true;</span>
+  53 |     | <span class='neutral'> } </span>
+  54 |     | <span class='neutral'></span>
+  55 |     | <span class='neutral'></span>
+  56 |     | <span class='neutral'> //We require new_spouse != address(0);</span>
+  57 | *   | <span class='executed'> function marry(address new_spouse) public {</span>
+  58 | *   | <span class='executed'>  spouse = new_spouse;</span>
+  59 | *   | <span class='executed'>  isMarried = true;</span>
+  60 |     | <span class='neutral'> }</span>
+  61 |     | <span class='neutral'> </span>
+  62 | *   | <span class='executed'> function divorce() public {</span>
+  63 | *   | <span class='executed'>  spouse = address(0);</span>
+  64 | *   | <span class='executed'>  isMarried = false;</span>
+  65 |     | <span class='neutral'> }</span>
+  66 |     | <span class='neutral'></span>
+  67 |     | <span class='neutral'> /* Transfer part of tax allowance to own spouse */</span>
+  68 |     | <span class='unexecuted'> function transferAllowance(uint change) public {</span>
+  69 |     | <span class='unexecuted'>  tax_allowance = tax_allowance - change;</span>
+  70 |     | <span class='unexecuted'>  Taxpayer sp = Taxpayer(address(spouse));</span>
+  71 |     | <span class='unexecuted'>  sp.setTaxAllowance(sp.getTaxAllowance()+change);</span>
+  72 |     | <span class='neutral'> }</span>
+  73 |     | <span class='neutral'></span>
+  74 |     | <span class='unexecuted'> function haveBirthday() public {</span>
+  75 |     | <span class='unexecuted'>  age++;</span>
+  76 |     | <span class='neutral'> }</span>
+  77 |     | <span class='neutral'> </span>
+  78 |     | <span class='unexecuted'>  function setTaxAllowance(uint ta) public {</span>
+  79 |     | <span class='unexecuted'>    require(Taxpayer(msg.sender).isContract() || Lottery(msg.sender).isContract());</span>
+  80 |     | <span class='unexecuted'>    tax_allowance = ta;</span>
+  81 |     | <span class='neutral'>  }</span>
+  82 |     | <span class='unexecuted'>  function getTaxAllowance() public view returns(uint) {</span>
+  83 |     | <span class='unexecuted'>    return tax_allowance;</span>
+  84 |     | <span class='neutral'>  }</span>
+  85 |     | <span class='unexecuted'>  function isContract() public view returns(bool){</span>
+  86 |     | <span class='unexecuted'>    return iscontract;</span>
+  87 |     | <span class='neutral'>  }</span>
+  88 |     | <span class='neutral'></span>
+  89 |     | <span class='unexecuted'>  function joinLottery(address lot, uint256 r) public {</span>
+  90 |     | <span class='unexecuted'>    Lottery l = Lottery(lot);</span>
+  91 |     | <span class='unexecuted'>    l.commit(keccak256(abi.encode(r)));</span>
+  92 |     | <span class='unexecuted'>    rev = r;</span>
+  93 |     | <span class='neutral'>  }</span>
+  94 |     | <span class='unexecuted'>   function revealLottery(address lot, uint256 r) public {</span>
+  95 |     | <span class='unexecuted'>    Lottery l = Lottery(lot);</span>
+  96 |     | <span class='unexecuted'>    l.reveal(r);</span>
+  97 |     | <span class='unexecuted'>    rev = 0;</span>
+  98 |     | <span class='neutral'>  }</span>
+  99 |     | <span class='neutral'></span>
+ 100 |     | <span class='neutral'>}</span>
+ 101 |     | <span class='neutral'></span>
+
+</code>
+<br />
+
+<b>/home/kali/Desktop/SSA-project/TestTaxPayerEchidna.sol</b>
+<code>
+  1 |     | <span class='neutral'>// SPDX-License-Identifier: MIT</span>
+  2 |     | <span class='neutral'>pragma solidity ^0.8.22;</span>
+  3 |     | <span class='neutral'></span>
+  4 |     | <span class='neutral'>import &quot;Taxpayer.sol&quot;;</span>
+  5 |     | <span class='neutral'></span>
+  6 |     | <span class='neutral'></span>
+  7 | *   | <span class='executed'>contract TestHardness {</span>
+  8 |     | <span class='unexecuted'>    Taxpayer public t1;</span>
+  9 | *   | <span class='executed'>    Taxpayer public t2;</span>
+ 10 |     | <span class='neutral'></span>
+ 11 |     | <span class='neutral'></span>
+ 12 |     | <span class='neutral'>    // constructor: create 2 Taxpayer with whatever addresses parent: address(0) is ok</span>
+ 13 | *   | <span class='executed'>    constructor() {</span>
+ 14 | *   | <span class='executed'>        t1 = new Taxpayer(address(0), address(0));</span>
+ 15 | *   | <span class='executed'>        t2 = new Taxpayer(address(0), address(0));</span>
+ 16 |     | <span class='neutral'>    }</span>
+ 17 |     | <span class='neutral'></span>
+ 18 |     | <span class='neutral'>    // make marry t2 with t1 (using its address)</span>
+ 19 | *   | <span class='executed'>    function t2_marry_t1()public {</span>
+ 20 | *   | <span class='executed'>        t2.marry(address(t1));</span>
+ 21 |     | <span class='neutral'>    }</span>
+ 22 |     | <span class='neutral'></span>
+ 23 |     | <span class='neutral'></span>
+ 24 |     | <span class='neutral'>    // for divorce</span>
+ 25 | *   | <span class='executed'>    function t2_divorce() public {</span>
+ 26 | *   | <span class='executed'>        t2.divorce();</span>
+ 27 |     | <span class='neutral'>    }</span>
+ 28 |     | <span class='neutral'></span>
+ 29 |     | <span class='neutral'></span>
+ 30 |     | <span class='neutral'>    // ECHIDNA INVARIANT: if t1 is married, then its spouse has to point to t2</span>
+ 31 |     | <span class='neutral'>    // and if t2 is also married, its spouse has to point to t1</span>
+ 32 |     | <span class='neutral'>    // if they are not married, the condition is true as well</span>
+ 33 |     | <span class='unexecuted'>    function echidna_mutual_marriage() public view returns (bool) {</span>
+ 34 |     | <span class='neutral'>        // if t1 is married then its spouse address has to be t2&#39;s</span>
+ 35 |     | <span class='unexecuted'>        if(t1.getIsMarried()) {</span>
+ 36 |     | <span class='unexecuted'>            if(t1.getSpouse() != address(t2)) {</span>
+ 37 |     | <span class='unexecuted'>                return false;</span>
+ 38 |     | <span class='neutral'>            }</span>
+ 39 |     | <span class='neutral'>        }</span>
+ 40 |     | <span class='neutral'></span>
+ 41 |     | <span class='neutral'>        // if t2 is married then its spouse address has to be t1&#39;s</span>
+ 42 |     | <span class='unexecuted'>        if(t2.getIsMarried()) {</span>
+ 43 |     | <span class='unexecuted'>            if(t2.getSpouse() != address(t1)) {</span>
+ 44 |     | <span class='unexecuted'>                return false;</span>
+ 45 |     | <span class='neutral'>            }</span>
+ 46 |     | <span class='neutral'>        }</span>
+ 47 |     | <span class='neutral'></span>
+ 48 |     | <span class='unexecuted'>        return true;</span>
+ 49 |     | <span class='neutral'></span>
+ 50 |     | <span class='neutral'>    }</span>
+ 51 |     | <span class='neutral'></span>
+ 52 |     | <span class='neutral'></span>
+ 53 |     | <span class='neutral'></span>
+ 54 |     | <span class='neutral'></span>
+ 55 |     | <span class='neutral'>}</span>
+
+</code>
+<br />
+

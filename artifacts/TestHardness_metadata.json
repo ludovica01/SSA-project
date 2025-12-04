@@ -1,0 +1,119 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "echidna_mutual_marriage",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "t1",
+				"outputs": [
+					{
+						"internalType": "contract Taxpayer",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "t2",
+				"outputs": [
+					{
+						"internalType": "contract Taxpayer",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "t2_divorce",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "t2_marry_t1",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"TaxPayerEchidna.sol": "TestHardness"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Lottery.sol": {
+			"keccak256": "0x3374826e99c609f5aa05dc00e82f7cbac3d87ec9ef2446286de83a6f5000c6a7",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://56bcd99352d5904835a349b250ad3007efd22c4ec6894cc6f7a728acf0c6b2e3",
+				"dweb:/ipfs/Qmao6qrWP36Y1oGxDbtMeBJMh6nECn2co8ADpGNTy4hwxn"
+			]
+		},
+		"TaxPayerEchidna.sol": {
+			"keccak256": "0x600105ef8f36e27d429cf59eda8ca62d8a7ef28303c2b010cc50331d14d673b0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e4ec92de5015569eea699e499e1f3f28790e831ed7f3d0a5375cce81b02c58bb",
+				"dweb:/ipfs/QmTKoGJQyihXAZyJzqX9GkPCHYYSLM1jfnHj1jidPCBpDz"
+			]
+		},
+		"Taxpayer.sol": {
+			"keccak256": "0xaac03ef1058134becbd953e4c5d907e5178ef52d8c6059ab63aacadcf3bc6ecc",
+			"urls": [
+				"bzz-raw://5beaf5c3f2aba03adfc637d7c4a5d4f526a47e89b5e92629540713c4c185582a",
+				"dweb:/ipfs/Qmf41HccTYLUKXAbAqdCq1FghGptWfvLb2dFiGm3yWkceL"
+			]
+		}
+	},
+	"version": 1
+}
