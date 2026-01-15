@@ -23,88 +23,187 @@ contract TestHardness_Lottery {
 
 
 
-    // commit: rev andd commited are saved
-    function echidna_commit_sets_rev_and_flags(uint256 r) public returns (bool) {
-        if(r==0) {
-            return true;
-        }
+   function echidna_commit_sets_rev_and_flags() public returns (bool) {
+    uint256 r = uint256(keccak256(abi.encode(block.number)));
+    if (r == 0) return true;
 
-        tp.joinLottery(address(lot), r);
-        // verify the internal state
-        return tp.rev() == r && tp.committed() == true;
+    tp.joinLottery(address(lot), r);
+    return tp.rev() == r && tp.committed();
+}
 
-    }
 
 
     // reveal not permitted if rev == 0
-    function echidna_reveal_requires_commit(uint256 r) public returns (bool) {
-        if(tp.rev() == 0) {
-            try tp.revealLottery(address(lot), r) {
-                return false;       // didn't have to exit
-            } catch {
-                return true;
-            }
-        }
+    function echidna_reveal_requires_commit() public returns (bool) {
+    uint256 r = uint256(keccak256(abi.encode(block.timestamp)));
 
-        return true;        // not applicable
+    if (tp.rev() == 0) {
+        try tp.revealLottery(address(lot), r) {
+            return false;
+        } catch {
+            return true;
+        }
     }
+    return true;
+}
+
 
 
     // reveal resets rev and committed
-    function echidna_reveal_resets_state(uint256 r) public returns (bool) {
-        if(r == 0) {
-            return true;
-        }
+  function echidna_reveal_resets_state() public returns (bool) {
+    uint256 r = uint256(keccak256(abi.encode(blockhash(block.number - 1))));
+    if (r == 0) return true;
 
-        tp.joinLottery(address(lot), r);
+    tp.joinLottery(address(lot), r);
+    lot.revealTime();
 
-        // simulate the flow of time to enter in thhe reveal phase
-        lot.revealTime();       // to avoid warnings
-
-        try tp.revealLottery(address(lot), r) {
-            return tp.rev() == 0 && tp.committed() == false;
-        } catch {
-            return true;        // if fails is due to the time is ok
-        }
+    try tp.revealLottery(address(lot), r) {
+        return tp.rev() == 0 && !tp.committed();
+    } catch {
+        return true;
     }
+}
 
 
-    // only owner can commit or reveal
-    function echidna_only_owner_can_commit(address attacker, uint256 r) public returns (bool) {
-        if(attacker == owner) {
-            return true;
-        }
+function echidna_only_owner_can_commit() public returns (bool) {
+    Attacker attacker = new Attacker(address(tp), address(lot));
 
-        try Taxpayer(address(tp)).joinLottery(address(lot), r) {
-            return false;
-        } catch {
-            return true;        // correctly blocked
-        }
-    }
+    bool success = attacker.tryCommit();
+
+    // the attack should not work
+    return !success;
+}
+
+
+
+
+
 
     // end lottery set the allowance to 9000
-    function echidna_endLottery_sets_9000(uint256 r) public returns (bool) {
-        if(r==0) {
-            return true;
-        }
+   function echidna_endLottery_sets_9000() public returns (bool) {
+    uint256 r = uint256(keccak256(abi.encode(block.timestamp, address(this))));
+    if (r == 0) {
+        return true;
+    }
 
-        tp.joinLottery(address(lot), r);
+    tp.joinLottery(address(lot), r);
 
-        // reveal phase
-        try tp.revealLottery(address(lot), r) {
-            // force to the end of the lot
-            try lot.endLottery() {
-                uint ta = tp.getTaxAllowance();
-
-                return ta == 9000;
-            } catch {
-                return true;
-            }
+    try tp.revealLottery(address(lot), r) {
+        try lot.endLottery() {
+            return tp.getTaxAllowance() == 9000;
         } catch {
             return true;
         }
+    } catch {
+        return true;
+    }
+}
+
+    
+    
+    // a participant cannot appear more than once among potential winners
+function echidna_unique_participant_in_lottery() public returns (bool) {
+    uint256 r1 = uint256(keccak256("r1"));
+    uint256 r2 = uint256(keccak256("r2"));
+
+    tp.joinLottery(address(lot), r1);
+
+    try tp.joinLottery(address(lot), r2) {
+        return false; // doppio commit NON ammesso
+    } catch {
+        return true;
+    }
+}
+
+
+
+
+
+
+// participants with age >= 65 must be rejected
+function echidna_reject_participants_over_65() public returns (bool) {
+    uint256 r = uint256(keccak256(abi.encode(block.timestamp, address(this), "r")));
+    uint256 age = 65 + (uint256(keccak256(abi.encode(block.number))) % 50); // age >= 65
+
+    if (r == 0) {
+        return true;
     }
 
+    // set taxpayer age to invalid value
+    tp.setAge(age);
+
+    try tp.joinLottery(address(lot), r) {
+        return false; // incorrectly accepted
+    } catch {
+        return true;  // correctly rejected
+    }
+}
+
+
+
+// spousal allowance sum is allowed to change if one spouse wins the lottery
+function echidna_spousal_allowance_sum_constant_unless_win() public returns (bool) {
+    uint256 r = uint256(keccak256(abi.encode(block.timestamp, address(this), "r")));
+
+    if (r == 0) {
+        return true;
+    }
+
+    uint256 initialSum = tp.getTaxAllowance();
+    try tp.getSpouseTaxAllowance() returns (uint spouseTA) {
+        initialSum += spouseTA;
+    } catch {
+        initialSum += 0;
+    }
+
+    tp.joinLottery(address(lot), r);
+
+    lot.revealTime();
+
+    try tp.revealLottery(address(lot), r) {
+        try lot.endLottery() {
+            uint256 finalSum = tp.getTaxAllowance();
+            try tp.getSpouseTaxAllowance() returns (uint spouseTA2) {
+                finalSum += spouseTA2;
+            } catch {
+                finalSum += 0;
+            }
+
+            if (tp.getTaxAllowance() != 9000) {
+                return finalSum == initialSum;
+            }
+
+            return true;
+        } catch {
+            return true;
+        }
+    } catch {
+        return true;
+    }
+}
 
 
 }
+
+
+// tmp attacker contract
+contract Attacker {
+    Taxpayer public tp;
+    address public lot;
+    uint256 private r;
+
+    constructor(address _tp, address _lot) {
+        tp = Taxpayer(_tp);
+        lot = _lot;
+	r = uint256(keccak256(abi.encode(block.timestamp, address(this))));
+    }
+
+    function tryCommit() public returns (bool) {
+       try tp.joinLottery(lot, r) {
+            return true;
+        } catch {
+            return false;
+        }
+    }
+}
+
