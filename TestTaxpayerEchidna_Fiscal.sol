@@ -40,7 +40,7 @@ contract TestHardness_Fiscal {
 
         if(!t1.getIsMarried()) {
             if(age>= 65) {
-                return allowance == 9000;       // for over 65
+                return allowance == 7000;       // for over 65
             } else {
                 return allowance == 5000;       // the default one
             }
@@ -50,9 +50,18 @@ contract TestHardness_Fiscal {
     }
 
     // the taxable income cannot be negative
-    function echidna_taxable_non_negative() public view returns (bool) {
-        return t1.taxableIncome() >= 0;
+   function echidna_taxable_consistent() public view returns (bool) {
+    uint income = t1.getIncome();
+    uint allowance = t1.getTaxAllowance();
+    uint taxable = t1.taxableIncome();
+
+    if (income >= allowance) {
+        return taxable == income - allowance;
+    } else {
+        return taxable == 0;
     }
+}
+
 
     // check if the income is less than tax_allowance, and if the calculated tax is 0
     function echidna_no_tax_below_allowance() public view returns (bool) {
@@ -72,15 +81,6 @@ contract TestHardness_Fiscal {
 
         return tax == (t*100)/1000;     // for the percentage
     }
-
-
-
-
-
-
-
-
-
 
 
 
