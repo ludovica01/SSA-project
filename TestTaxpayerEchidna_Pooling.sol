@@ -19,10 +19,12 @@ contract TestHardness_Pooling {
 
     // INVARIANT: only some valid operations can be performed
 
-    // make t1 marry t2 (only if conditions aree true, otherwise revert)
     function t1_marry_t2() public {
-        t1.marry(address(t2));
+    try t1.marry(address(t2)) {
+    } catch {
     }
+}
+
 
     /// transfer allowance: only Owner on t1, it is required t1 is married to t2
     function t1_transfer_to_t2(uint amount) public {
@@ -32,6 +34,30 @@ contract TestHardness_Pooling {
 
 
 
+    // negative actions: fails are expected
+
+    // attempt to transfer wheen not married -> has to revert
+    function fail_transfer_when_not_married() public {
+    // if t1 is already married, don't need to test
+    if (t1.getIsMarried()) return;
+    t1.transferAllowance(1);
+}
+   
+
+    // attempt to transfer 0. shouldn't be possible
+    function fail_transfer_zero_amount() public {
+        t1.transferAllowance(0);
+    }
+
+    // attempt to transfer more than its allowance. should revert
+    function fail_transfer_exceeded_allowance(uint amount) public {
+        t1.transferAllowance(amount);
+    }
+
+    // attempt to call receiveAllowance from a non-spouse/non from caller. should revert
+    function fail_unauthorized_receive(uint amount) public {
+        t1.receiveAllowance(amount, address(this));        // since msg.sender != from
+    }
 
    
     // INVARIANT: if t1 and t2 are married together, the sum of their tax_allowance has to be the same of the INITIAL_TAX_ALLOWANCE
@@ -50,6 +76,58 @@ contract TestHardness_Pooling {
         return true;            // if are married but not each other, it is not applicable
 
     }
+
+
+
+    // INVARIANT: if t1 transferred allowance to t2, then the received value has to  be visible as add in tax_allowance of t2
+    // the sum should not increase more than the maximum base
+    function echidna_allowance_sum_leq_base() public view returns (bool) {
+        // if marriied, the current sum should be less/equal than the sum of deffault/OAP for the two of them
+        if(t1.getIsMarried() && t2.getIsMarried() &&
+            t1.getSpouse() == address(t2) && t2.getSpouse() == address(t1)) {
+
+                uint myBase = t1.getDefaultAllowance();
+                uint partnerBase = t2.getDefaultAllowance();
+                uint sumCurrent = t1.getTaxAllowance() + t2.getTaxAllowance();
+
+                return sumCurrent <= (myBase + partnerBase);
+            }
+        return true;        // not applicable if not married
+    }
+
+
+    // there should not be unwanted modifies o allowance values by non autthorized callers
+  function echidna_allowance_non_negative() public view returns (bool) {
+    // allowance cannot be negative, or be higher than the maximum threshold
+    uint t1Max = t1.getDefaultAllowance() + t2.getDefaultAllowance();
+    uint t2Max = t1Max;
+
+    if (t1.getIsMarried()) {
+        return t1.getTaxAllowance() <= t1Max
+            && t2.getTaxAllowance() <= t2Max;
+    }
+
+    // se single: allowance = default (o OAP)
+    return t1.getTaxAllowance() == t1.getDefaultAllowance()
+        && t2.getTaxAllowance() == t2.getDefaultAllowance();
+}
+
+
+
+
+    // receiving coherence: if t2 has recently received by t1, then itss currentt tax allowance value will be
+    // higher than the initial one
+    function echidna_received_at_least_initial() public view returns (bool) {
+    // only meaningful if t2 is married to t1; otherwise not applicable
+    if (t2.getIsMarried() && t2.getSpouse() == address(t1)) {
+        return t2.getTaxAllowance() >= t2.getInitialTaxAllowance();
+    }
+    return true;
+}
+
+
+
+
 
 
 
